@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask instance folder
+instance/
+
+# Logs
+*.log
+
+# Miscellaneous
+*.swp
+*.swo
+.DS_Store

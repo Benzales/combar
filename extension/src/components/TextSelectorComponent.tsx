@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { highlightSelectedText } from "../../utils/textSelector";
+import { highlightSelectedText } from "../utils/textSelector";
 
 const TextSelectorComponent: React.FC = () => {
   useEffect(() => {

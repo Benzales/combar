@@ -1,8 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const changeBackgroundColor = () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id as number, { action: 'changeBackgroundColor' });
+    chrome.tabs.sendMessage(tabs[0].id as number, {
+      action: "changeBackgroundColor",
+    });
   });
 };
 

@@ -37,14 +37,65 @@ function getTextNodesInRange(range: Range): Text[] {
   return textNodes;
 }
 
+function getDomPath(element: HTMLElement | null): string {
+  if (!element) return '';
+
+  let path: string[] = [];
+  let node: HTMLElement | null = element;
+
+  while (node && node.nodeType === Node.ELEMENT_NODE) {
+    let selector: string = node.nodeName.toLowerCase();
+    if (node.id) {
+      selector += '#' + node.id;
+      path.unshift(selector);
+      break;
+    } else {
+      let sibling: HTMLElement | null = node;
+      let siblingIndex: number = 1;
+      while ((sibling = sibling.previousElementSibling as HTMLElement | null)) {
+        if (sibling.nodeName.toLowerCase() === selector) siblingIndex++;
+      }
+      if (siblingIndex > 1) selector += ':nth-of-type(' + siblingIndex + ')';
+    }
+    path.unshift(selector);
+    node = node.parentElement;
+  }
+
+  return path.join(' > ');
+}
+
+function findTextNodeByDomPath(domPath: string, startOffset: number, endOffset: number): Text | null {
+  const element = document.querySelector(domPath);
+  if (!element) return null;
+
+  let textNode: Text | null = null;
+  const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  while (treeWalker.nextNode()) {
+    const node = treeWalker.currentNode as Text;
+    if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+      if (startOffset <= node.textContent.length && endOffset <= node.textContent.length) {
+        textNode = node;
+        break;
+      }
+    }
+  }
+
+  return textNode;
+}
+
+
 export function highlightSelectedText(
   selection: Selection
 ): void {
   const range = selection.getRangeAt(0);
 
   const textNodes = getTextNodesInRange(range);
-  console.log(textNodes.length);
   if (!textNodes.length) return;
+
+  const domPaths = textNodes.map((textNode) => {
+    const parentElement = textNode.parentElement;
+    return parentElement ? getDomPath(parentElement) : '';
+  });
 
   const highlightStyle = {
     backgroundColor: "yellow",
@@ -53,19 +104,22 @@ export function highlightSelectedText(
 
   const highlights: HTMLElement[] = [];
 
-  textNodes.forEach((textNode, index) => {
+  domPaths.forEach((domPath, index) => {
+    const startOffset = index === 0 ? range.startOffset : 0;
+    const textNode = findTextNodeByDomPath(domPath, startOffset, 0);
+    if (!textNode) return;
+    
+    const endOffset = index === domPaths.length - 1 ? range.endOffset : (textNode && textNode.length) || 0;
+  
     const highlight = document.createElement("span");
     Object.assign(highlight.style, highlightStyle);
-
-    const startOffset = index === 0 ? range.startOffset : 0;
-    const endOffset = index === textNodes.length - 1 ? range.endOffset : textNode.length;
-
+  
     const subRange = document.createRange();
     subRange.setStart(textNode, startOffset);
     subRange.setEnd(textNode, endOffset);
-
+  
     subRange.surroundContents(highlight);
-
+  
     highlights.push(highlight);
   });
 
@@ -94,7 +148,6 @@ export function updateTextBoxPosition(): void {
   if (textBox) {
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
-      console.log("updateTextBoxPosition");
       const range = selection.getRangeAt(0);
       const highlightRect = range.getBoundingClientRect();
       textBox.style.top = `${highlightRect.top + window.scrollY}px`;

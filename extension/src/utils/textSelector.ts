@@ -1,3 +1,6 @@
+import { SelectionData } from "../types";
+import { request } from "./apiRequests";
+
 let textBox: HTMLElement | null = null;
 
 export function findScrollableParent(
@@ -20,13 +23,18 @@ function getTextNodesInRange(range: Range): Text[] {
     NodeFilter.SHOW_TEXT,
     {
       acceptNode: (node) => {
-        return range.intersectsNode(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        return range.intersectsNode(node)
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_REJECT;
       },
     }
   );
 
   // Add this check to handle single text node selections
-  if (range.startContainer.nodeType === Node.TEXT_NODE && range.startContainer === range.endContainer) {
+  if (
+    range.startContainer.nodeType === Node.TEXT_NODE &&
+    range.startContainer === range.endContainer
+  ) {
     textNodes.push(range.startContainer as Text);
   } else {
     while (treeWalker.nextNode()) {
@@ -38,7 +46,7 @@ function getTextNodesInRange(range: Range): Text[] {
 }
 
 function getDomPath(element: HTMLElement | null): string {
-  if (!element) return '';
+  if (!element) return "";
 
   let path: string[] = [];
   let node: HTMLElement | null = element;
@@ -46,7 +54,7 @@ function getDomPath(element: HTMLElement | null): string {
   while (node && node.nodeType === Node.ELEMENT_NODE) {
     let selector: string = node.nodeName.toLowerCase();
     if (node.id) {
-      selector += '#' + node.id;
+      selector += "#" + node.id;
       path.unshift(selector);
       break;
     } else {
@@ -55,16 +63,20 @@ function getDomPath(element: HTMLElement | null): string {
       while ((sibling = sibling.previousElementSibling as HTMLElement | null)) {
         if (sibling.nodeName.toLowerCase() === selector) siblingIndex++;
       }
-      if (siblingIndex > 1) selector += ':nth-of-type(' + siblingIndex + ')';
+      if (siblingIndex > 1) selector += ":nth-of-type(" + siblingIndex + ")";
     }
     path.unshift(selector);
     node = node.parentElement;
   }
 
-  return path.join(' > ');
+  return path.join(" > ");
 }
 
-function findTextNodeByDomPath(domPath: string, startOffset: number, endOffset: number): Text | null {
+function findTextNodeByDomPath(
+  domPath: string,
+  startOffset: number,
+  endOffset: number
+): Text | null {
   const element = document.querySelector(domPath);
   if (!element) return null;
 
@@ -73,7 +85,10 @@ function findTextNodeByDomPath(domPath: string, startOffset: number, endOffset: 
   while (treeWalker.nextNode()) {
     const node = treeWalker.currentNode as Text;
     if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-      if (startOffset <= node.textContent.length && endOffset <= node.textContent.length) {
+      if (
+        startOffset <= node.textContent.length &&
+        endOffset <= node.textContent.length
+      ) {
         textNode = node;
         break;
       }
@@ -83,10 +98,7 @@ function findTextNodeByDomPath(domPath: string, startOffset: number, endOffset: 
   return textNode;
 }
 
-
-export function highlightSelectedText(
-  selection: Selection
-): void {
+export function highlightSelectedText(selection: Selection): void {
   const range = selection.getRangeAt(0);
 
   const textNodes = getTextNodesInRange(range);
@@ -94,8 +106,19 @@ export function highlightSelectedText(
 
   const domPaths = textNodes.map((textNode) => {
     const parentElement = textNode.parentElement;
-    return parentElement ? getDomPath(parentElement) : '';
+    return parentElement ? getDomPath(parentElement) : "";
   });
+
+  let selectionData: SelectionData = {
+    url: window.location.href,
+    text: selection.toString(),
+    paths: domPaths,
+    startOffset: range.startOffset,
+    endOffset: range.endOffset,
+  };
+
+  // store selection in database
+  request("/api/selection", "POST", selectionData);
 
   const highlightStyle = {
     backgroundColor: "yellow",
@@ -104,22 +127,25 @@ export function highlightSelectedText(
 
   const highlights: HTMLElement[] = [];
 
-  domPaths.forEach((domPath, index) => {
-    const startOffset = index === 0 ? range.startOffset : 0;
+  selectionData.paths.forEach((domPath, index) => {
+    const startOffset = index === 0 ? selectionData.startOffset : 0;
     const textNode = findTextNodeByDomPath(domPath, startOffset, 0);
     if (!textNode) return;
-    
-    const endOffset = index === domPaths.length - 1 ? range.endOffset : (textNode && textNode.length) || 0;
-  
+
+    const endOffset =
+      index === selectionData.paths.length - 1
+        ? selectionData.endOffset
+        : (textNode && textNode.length) || 0;
+
     const highlight = document.createElement("span");
     Object.assign(highlight.style, highlightStyle);
-  
+
     const subRange = document.createRange();
     subRange.setStart(textNode, startOffset);
     subRange.setEnd(textNode, endOffset);
-  
+
     subRange.surroundContents(highlight);
-  
+
     highlights.push(highlight);
   });
 
@@ -136,8 +162,9 @@ export function highlightSelectedText(
 
   document.body.appendChild(textBox);
 
-  const scrollableParent: HTMLElement | Window =
-    findScrollableParent(highlights[0]);
+  const scrollableParent: HTMLElement | Window = findScrollableParent(
+    highlights[0]
+  );
   scrollableParent.addEventListener("scroll", updateTextBoxPosition);
   window.addEventListener("scroll", updateTextBoxPosition);
 

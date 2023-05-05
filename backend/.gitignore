@@ -9,6 +9,7 @@ __pycache__/
 
 # Flask instance folder
 instance/
+migrations/
 
 # Logs
 *.log
@@ -17,3 +18,4 @@ instance/
 *.swp
 *.swo
 .DS_Store
+.env

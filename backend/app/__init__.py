@@ -22,7 +22,7 @@ def create_app():
     from app.routes import api_bp
     app.register_blueprint(api_bp)
 
-    CORS(app)
+    CORS(app, resources={r'/api/*': {'origins': '*'}})
 
     return app
 

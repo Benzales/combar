@@ -1,13 +1,13 @@
 from app import db
 from sqlalchemy.dialects.postgresql import JSON
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)
-    selections = db.relationship('Selection', backref='user', lazy=True)
+# class User(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String, nullable=False, unique=True)
+#     selections = db.relationship('Selection', backref='user', lazy=True)
 
-    def __repr__(self):
-        return f'<User {self.id}>'
+#     def __repr__(self):
+#         return f'<User {self.id}>'
 
 class Url(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +19,7 @@ class Url(db.Model):
 
 class Selection(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     url_id = db.Column(db.Integer, db.ForeignKey('url.id'), nullable=False)
     text = db.Column(db.String, nullable=False)
     paths = db.Column(JSON, nullable=False)

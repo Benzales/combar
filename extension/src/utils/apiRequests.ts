@@ -3,16 +3,18 @@ export async function request(
   method: string = "GET",
   body: any = null
 ) {
-  const response = await fetch("http://localhost:5000" + url, {
+  const requestConfig: RequestInit = {
     method: method,
     headers: {
       "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+    }
+  };
+  if(body !== null) requestConfig.body = JSON.stringify(body);
+  
+  const response = await fetch("http://localhost:5000" + url, requestConfig);
 
   if (!response.ok) {
-    throw new Error("Error storing selection data");
+    throw new Error();
   }
 
   return response.json();

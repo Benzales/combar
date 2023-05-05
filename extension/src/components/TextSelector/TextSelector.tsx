@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { highlightSelectedText } from "../utils/textSelector";
+import { selectText } from './textSelectorUtil';
 
-const TextSelectorComponent: React.FC = () => {
+const TextSelector: React.FC = () => {
   useEffect(() => {
     document.addEventListener("mouseup", handleMouseUp);
 
@@ -13,11 +13,11 @@ const TextSelectorComponent: React.FC = () => {
   const handleMouseUp = () => {
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) {
-      highlightSelectedText(selection);
+      selectText(selection);
     }
   };
 
   return null;
 };
 
-export default TextSelectorComponent;
+export default TextSelector;

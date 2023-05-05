@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/App";
+import Popup from "./Popup";
 import "webextension-polyfill-ts";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Popup />
   </React.StrictMode>,
   document.getElementById("root")
 );

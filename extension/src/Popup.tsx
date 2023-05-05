@@ -8,7 +8,7 @@ const changeBackgroundColor = () => {
   });
 };
 
-const App: React.FC = () => {
+const Popup: React.FC = () => {
   return (
     <div className="App">
       <h1>Social</h1>
@@ -17,4 +17,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Popup;

@@ -22,10 +22,11 @@ def create_selection():
     # Create a new Selection record and associate it with the Url record
     new_selection = Selection(
         url_id=url_record.id,
-        text=data['text'],
-        paths=data['paths'],
+        paths_to_text_node=data['pathsToTextNode'],
         start_offset=data['startOffset'],
-        end_offset=data['endOffset']
+        end_offset=data['endOffset'],
+        comment_text=data['commentText'],
+        selected_text=data['selectedText'],
     )
 
     db.session.add(new_selection)
@@ -44,10 +45,11 @@ def get_selections_by_url(url_string):
             {
                 'id': selection.id,
                 'url': url_record.url,
-                'text': selection.text,
-                'paths': selection.paths,
+                'pathsToTextNode': selection.paths_to_text_node,
                 'startOffset': selection.start_offset,
                 'endOffset': selection.end_offset,
+                'commentText': selection.comment_text,
+                'selectedText': selection.selected_text,
             }
             for selection in selections
         ]

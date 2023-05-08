@@ -2,11 +2,7 @@ import { getTextBoxStyle, selectionStyle } from "../../styles";
 import { Comment } from "../../types";
 import { request } from "../../utils/apiRequests";
 
-function findTextNodeByDomPath(
-  domPath: string,
-  startOffset: number,
-  endOffset: number
-): Text | null {
+function findTextNodeByDomPath( domPath: string ): Text | null {
   const element = document.querySelector(domPath);
   if (!element) return null;
 
@@ -17,29 +13,12 @@ function findTextNodeByDomPath(
   do {
     const node = treeWalker.currentNode as Text;
     if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-      if (
-        startOffset <= node.textContent.length &&
-        endOffset <= node.textContent.length
-      ) {
-        textNode = node;
-        break;
-      }
+      textNode = node;
+      break;
     }
   } while (treeWalker.nextNode());
 
   return textNode;
-}
-
-
-function findScrollableParent(el: HTMLElement | null): HTMLElement | Window {
-  while (el && el !== document.body) {
-    const style = window.getComputedStyle(el);
-    if (style.overflowY === "auto" || style.overflowY === "scroll") {
-      return el;
-    }
-    el = el.parentElement;
-  }
-  return window;
 }
 
 export async function showComments() {
@@ -63,47 +42,31 @@ export async function showComments() {
       const textBoxContainer = document.createElement("div");
       textBoxContainer.classList.add("combar-text-box-container");
       document.body.appendChild(textBoxContainer);
-      textBoxContainer.addEventListener("scoll", updateTextBoxPositions);
+      window.addEventListener("scoll", updateTextBoxPositions);
 
       // highlight selected text and add text boxes for each comment
       const commentsList = response as Comment[];
       commentsList.forEach((comment) => {
-        const contiguousSelectedText: HTMLElement[] = [];
-        comment.paths.forEach((domPath, index) => {
-          const startOffset = index === 0 ? comment.startOffset : 0;
-          const textNode = findTextNodeByDomPath(domPath, startOffset, 0);
-          if (!textNode) return;
-
-          const endOffset =
-            index === comment.paths.length - 1
-              ? comment.endOffset
-              : (textNode && textNode.length) || 0;
-
-          const selectedText = document.createElement("span");
-          Object.assign(selectedText.style, selectionStyle);
-
-          const subRange = document.createRange();
-          subRange.setStart(textNode, startOffset);
-          subRange.setEnd(textNode, endOffset);
-
-          subRange.surroundContents(selectedText);
-
-          contiguousSelectedText.push(selectedText);
+        const textNodes: Text[] = comment.pathsToTextNode.flatMap((domPath) => {
+          const textNode = findTextNodeByDomPath(domPath);
+          return textNode ? [textNode] : [];
         });
         
-        if (!contiguousSelectedText.length) return;
-        const highlightRect = contiguousSelectedText[0].getBoundingClientRect();
+        if (!textNodes.length) return;
+        const midTextNode = textNodes[Math.floor(textNodes.length / 2)];
+        if(midTextNode.parentElement) {
+          const boundingRect = midTextNode.parentElement.getBoundingClientRect();
 
-        // add the text box
-        const textBox: HTMLElement = document.createElement("div");
-        textBox.classList.add("combar-text-box");
-        textBox.innerText = "Enter your text here";
-        Object.assign(
-          textBox.style,
-          getTextBoxStyle(highlightRect.top + window.scrollY)
-        );
-
-        textBoxContainer.appendChild(textBox);
+          // add the text box
+          const textBox: HTMLElement = document.createElement("div");
+          textBox.classList.add("combar-text-box");
+          textBox.innerText = comment.commentText;
+          Object.assign(
+            textBox.style,
+            getTextBoxStyle(boundingRect.top + window.scrollY)
+          );
+          textBoxContainer.appendChild(textBox);
+        } else { console.log("midTextNode.parentElement is null"); }
       });
     })
     .catch((error) => {

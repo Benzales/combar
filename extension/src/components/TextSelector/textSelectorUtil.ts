@@ -53,26 +53,30 @@ function getDomPath(element: HTMLElement | null): string {
   return path.join(" > ");
 }
 
-export function selectText(selection: Selection): void {
+export async function selectText(selection: Selection): Promise<Comment | undefined> {
     const range = selection.getRangeAt(0);
   
     const textNodes = getTextNodesInRange(range);
-    if (!textNodes.length) return;
-  
-    const domPaths = textNodes.map((textNode) => {
-      const parentElement = textNode.parentElement;
-      return parentElement ? getDomPath(parentElement) : "";
-    });
-  
-    let comment: Comment = {
-      url: window.location.href,
-      text: selection.toString(),
-      paths: domPaths,
-      startOffset: range.startOffset,
-      endOffset: range.endOffset,
-    };
-  
-    // store selection in database
-    request("/api/selection", "POST", comment);
+    if (textNodes.length) {
+      const domPaths = textNodes.map((textNode) => {
+        const parentElement = textNode.parentElement;
+        return parentElement ? getDomPath(parentElement) : "";
+      });
+    
+      let comment: Comment = {
+        url: window.location.href,
+        pathsToTextNode: domPaths,
+        startOffset: range.startOffset,
+        endOffset: range.endOffset,
+        commentText: "Users' comment goes here",
+        selectedText: selection.toString(),
+      };
+    
+      // store selection in database
+      await request("/api/selection", "POST", comment);
+      return comment;
+    } else {
+      console.error("No text nodes found");
+    }
   }
   

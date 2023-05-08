@@ -1,18 +1,20 @@
-import React from "react";
+import React from 'react';
 
-const changeBackgroundColor = () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id as number, {
-      action: "changeBackgroundColor",
+const Popup = () => {
+  const handleClick = () => {
+    // send message to 
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      if (activeTab && activeTab.id) {
+        chrome.tabs.sendMessage(activeTab.id, { action: 'comment' });
+      }
     });
-  });
-};
+  };
 
-const Popup: React.FC = () => {
   return (
-    <div className="App">
-      <h1>Social</h1>
-      <button onClick={changeBackgroundColor}>Change Background Color</button>
+    <div>
+      <h1>Combar</h1>
+      <button onClick={handleClick}>comment</button>
     </div>
   );
 };

@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { selectText } from './textSelectorUtil';
+import { Comment } from '../../types';
 
 const TextSelector: React.FC = () => {
-  useEffect(() => {
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, []);
-
-  const handleMouseUp = () => {
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'comment') {
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+  });
+  
+  const handleMouseUp = async () => {
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) {
-      selectText(selection);
+      const comment: Comment | undefined = await selectText(selection);
+      document.removeEventListener("mouseup", handleMouseUp);
     }
   };
 

@@ -1,7 +1,7 @@
-export type SelectionData = {
-    url: string;
-    text: string;
-    paths: string[];
-    startOffset: number;
-    endOffset: number;
-  };
+export type Comment = {
+  url: string;
+  text: string;
+  paths: string[];
+  startOffset: number;
+  endOffset: number;
+};

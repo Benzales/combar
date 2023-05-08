@@ -1,4 +1,4 @@
-import { SelectionData } from "../../types";
+import { Comment } from "../../types";
 import { request } from "../../utils/apiRequests";
 
 function getTextNodesInRange(range: Range): Text[] {
@@ -15,17 +15,9 @@ function getTextNodesInRange(range: Range): Text[] {
     }
   );
 
-  // Add this check to handle single text node selections
-  if (
-    range.startContainer.nodeType === Node.TEXT_NODE &&
-    range.startContainer === range.endContainer
-  ) {
-    textNodes.push(range.startContainer as Text);
-  } else {
-    while (treeWalker.nextNode()) {
-      textNodes.push(treeWalker.currentNode as Text);
-    }
-  }
+  do {
+    textNodes.push(treeWalker.currentNode as Text);
+  } while (treeWalker.nextNode());
 
   return textNodes;
 }
@@ -44,7 +36,6 @@ function getDomPath(element: HTMLElement | null): string {
       break;
     } else {
       if (node.classList.length > 0) {
-        console.log("node.classList: ", node.classList);
         selector += "." + Array.from(node.classList).join(".");
       }
 
@@ -73,7 +64,7 @@ export function selectText(selection: Selection): void {
       return parentElement ? getDomPath(parentElement) : "";
     });
   
-    let selectionData: SelectionData = {
+    let comment: Comment = {
       url: window.location.href,
       text: selection.toString(),
       paths: domPaths,
@@ -82,6 +73,6 @@ export function selectText(selection: Selection): void {
     };
   
     // store selection in database
-    request("/api/selection", "POST", selectionData);
+    request("/api/selection", "POST", comment);
   }
   

@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "My Chrome Extension",
+  "name": "Combar",
   "version": "1.0",
-  "description": "A simple Chrome extension with React and TypeScript",
+  "description": "a universal comment bar on every webpage. It’s a chrome extension that allows users to select text and create associated text boxes in the margins of webpages.",
   "permissions": ["activeTab"],
   "browser_action": {
     "default_popup": "index.html"

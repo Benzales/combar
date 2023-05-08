@@ -1,4 +1,4 @@
-export const highlightStyle = {
+export const selectionStyle = {
     backgroundColor: "yellow",
     color: "black",
 };

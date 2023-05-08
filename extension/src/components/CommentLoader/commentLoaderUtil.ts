@@ -1,9 +1,6 @@
-import { start } from "repl";
-import { getTextBoxStyle, highlightStyle } from "../../styles";
-import { SelectionData } from "../../types";
+import { getTextBoxStyle, selectionStyle } from "../../styles";
+import { Comment } from "../../types";
 import { request } from "../../utils/apiRequests";
-
-let textBox: HTMLElement | null = null;
 
 function findTextNodeByDomPath(
   domPath: string,
@@ -45,65 +42,68 @@ function findScrollableParent(el: HTMLElement | null): HTMLElement | Window {
   return window;
 }
 
-function updateTextBoxPosition(): void {
-  if (textBox) {
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const highlightRect = range.getBoundingClientRect();
-      textBox.style.top = `${highlightRect.top + window.scrollY}px`;
-    }
-  }
-}
-
 export async function showComments() {
   const currentUrl = encodeURIComponent(window.location.href);
   request("/api/urls/" + currentUrl + "/selections")
     .then((response) => {
-      const selectionDataList = response as SelectionData[];
+      const updateTextBoxPositions = () => {
+        const textBoxes = textBoxContainer.querySelectorAll(".combar-text-box");
+        textBoxes.forEach((element) => {
+          const textBox = element as HTMLElement;
+          const selection = window.getSelection();
+          if (selection && selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const highlightRect = range.getBoundingClientRect();
+            textBox.style.top = `${highlightRect.top + window.scrollY}px`;
+          }
+        });
+      }
+      
+      // create container for all text boxes
+      const textBoxContainer = document.createElement("div");
+      textBoxContainer.classList.add("combar-text-box-container");
+      document.body.appendChild(textBoxContainer);
+      textBoxContainer.addEventListener("scoll", updateTextBoxPositions);
 
-      const highlights: HTMLElement[] = [];
-
-      selectionDataList.forEach((selectionData) => {
-        selectionData.paths.forEach((domPath, index) => {
-          const startOffset = index === 0 ? selectionData.startOffset : 0;
+      // highlight selected text and add text boxes for each comment
+      const commentsList = response as Comment[];
+      commentsList.forEach((comment) => {
+        const contiguousSelectedText: HTMLElement[] = [];
+        comment.paths.forEach((domPath, index) => {
+          const startOffset = index === 0 ? comment.startOffset : 0;
           const textNode = findTextNodeByDomPath(domPath, startOffset, 0);
           if (!textNode) return;
 
           const endOffset =
-            index === selectionData.paths.length - 1
-              ? selectionData.endOffset
+            index === comment.paths.length - 1
+              ? comment.endOffset
               : (textNode && textNode.length) || 0;
 
-          const highlight = document.createElement("span");
-          Object.assign(highlight.style, highlightStyle);
+          const selectedText = document.createElement("span");
+          Object.assign(selectedText.style, selectionStyle);
 
           const subRange = document.createRange();
           subRange.setStart(textNode, startOffset);
           subRange.setEnd(textNode, endOffset);
 
-          subRange.surroundContents(highlight);
+          subRange.surroundContents(selectedText);
 
-          highlights.push(highlight);
+          contiguousSelectedText.push(selectedText);
         });
         
-        if (!highlights.length) return;
-        const highlightRect = highlights[0].getBoundingClientRect();
+        if (!contiguousSelectedText.length) return;
+        const highlightRect = contiguousSelectedText[0].getBoundingClientRect();
 
-        textBox = document.createElement("div");
+        // add the text box
+        const textBox: HTMLElement = document.createElement("div");
+        textBox.classList.add("combar-text-box");
         textBox.innerText = "Enter your text here";
         Object.assign(
           textBox.style,
           getTextBoxStyle(highlightRect.top + window.scrollY)
         );
 
-        document.body.appendChild(textBox);
-
-        const scrollableParent: HTMLElement | Window = findScrollableParent(
-          highlights[0]
-        );
-        scrollableParent.addEventListener("scroll", updateTextBoxPosition);
-        window.addEventListener("scroll", updateTextBoxPosition);
+        textBoxContainer.appendChild(textBox);
       });
     })
     .catch((error) => {

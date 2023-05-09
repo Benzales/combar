@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Popup from "./Popup";
+import Comment from "./components/Comment";
 import "webextension-polyfill-ts";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Popup />
+    <Comment />
   </React.StrictMode>,
   document.getElementById("root")
 );

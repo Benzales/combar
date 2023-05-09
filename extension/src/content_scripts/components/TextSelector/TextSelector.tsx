@@ -1,6 +1,6 @@
 import React from "react";
 import { selectText } from './textSelectorUtil';
-import { Comment, Request } from '../../types';
+import { Comment, Request } from '../../../types';
 
 const TextSelector: React.FC = () => {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

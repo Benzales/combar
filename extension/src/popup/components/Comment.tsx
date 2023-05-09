@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Popup = () => {
+const Comment = () => {
   const handleClick = () => {
     // send message to 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -19,4 +19,4 @@ const Popup = () => {
   );
 };
 
-export default Popup;
+export default Comment;

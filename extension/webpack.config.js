@@ -4,9 +4,9 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    popup: path.join(__dirname, 'src', 'index.tsx'),
-    contentScript: path.join(__dirname, 'src', 'ContentScript.tsx'),
-    background: path.join(__dirname, 'src', 'background.ts'),
+    popup: path.join(__dirname, 'src', 'popup/Popup.tsx'),
+    contentScript: path.join(__dirname, 'src', 'content_scripts/ContentScript.tsx'),
+    background: path.join(__dirname, 'src', 'background/background.ts'),
   },
   output: {
     path: __dirname + '/dist',

@@ -1,5 +1,5 @@
-import { getTextBoxStyle } from "../../styles";
-import { Comment, Request } from "../../types";
+import { getTextBoxStyle } from "../../../styles";
+import { Comment, Request } from "../../../types";
 
 function findTextNodeByDomPath( domPath: string ): Text | null {
   const element = document.querySelector(domPath);

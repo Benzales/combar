@@ -1,4 +1,4 @@
-import { Comment } from "../../types";
+import { Comment } from "../../../types";
 
 function getTextNodesInRange(range: Range): Text[] {
   const textNodes: Text[] = [];

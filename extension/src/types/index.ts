@@ -6,3 +6,9 @@ export type Comment = {
   commentText: string;
   selectedText: string;
 };
+
+export type Request = {
+  url: string;
+  method: string;
+  body: any;
+}

@@ -5,7 +5,8 @@ const path = require('path');
 module.exports = {
   entry: {
     popup: path.join(__dirname, 'src', 'index.tsx'),
-    contentScript: path.join(__dirname, 'src', 'contentScript.tsx'),
+    contentScript: path.join(__dirname, 'src', 'ContentScript.tsx'),
+    background: path.join(__dirname, 'src', 'background.ts'),
   },
   output: {
     path: __dirname + '/dist',
@@ -28,6 +29,7 @@ module.exports = {
       template: './public/index.html',
       filename: 'index.html',
       chunks: ['popup'],
+      excludeChunks: ['background'],
     }),
     new CopyWebpackPlugin({
       patterns: [

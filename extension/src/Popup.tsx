@@ -6,7 +6,7 @@ const Popup = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (activeTab && activeTab.id) {
-        chrome.tabs.sendMessage(activeTab.id, { action: 'comment' });
+        chrome.tabs.sendMessage(activeTab.id, { action: 'select-text' });
       }
     });
   };

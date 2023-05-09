@@ -13,5 +13,9 @@
       "matches": ["<all_urls>"],
       "js": ["contentScript.bundle.js"]
     }
-  ]
+  ],
+  "background": {
+    "scripts": ["background.bundle.js"],
+    "persistent": false
+  }
 }

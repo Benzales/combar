@@ -1,5 +1,4 @@
 import { Comment } from "../../types";
-import { request } from "../../utils/apiRequests";
 
 function getTextNodesInRange(range: Range): Text[] {
   const textNodes: Text[] = [];
@@ -68,12 +67,9 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
         pathsToTextNode: domPaths,
         startOffset: range.startOffset,
         endOffset: range.endOffset,
-        commentText: "Users' comment goes here",
+        commentText: "",
         selectedText: selection.toString(),
       };
-    
-      // store selection in database
-      await request("/api/selection", "POST", comment);
       return comment;
     } else {
       console.error("No text nodes found");

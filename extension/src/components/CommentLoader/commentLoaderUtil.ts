@@ -1,6 +1,5 @@
-import { getTextBoxStyle, selectionStyle } from "../../styles";
-import { Comment } from "../../types";
-import { request } from "../../utils/apiRequests";
+import { getTextBoxStyle } from "../../styles";
+import { Comment, Request } from "../../types";
 
 function findTextNodeByDomPath( domPath: string ): Text | null {
   const element = document.querySelector(domPath);
@@ -23,8 +22,14 @@ function findTextNodeByDomPath( domPath: string ): Text | null {
 
 export async function showComments() {
   const currentUrl = encodeURIComponent(window.location.href);
-  request("/api/urls/" + currentUrl + "/selections")
-    .then((response) => {
+  const request: Request = {
+    url: "/api/urls/" + currentUrl + "/selections",
+    method: "GET",
+    body: null,
+  }
+  chrome.runtime.sendMessage({ action: 'request', request: request }, (response) => {
+    if(response.error) console.error(response.error);
+    else {
       const updateTextBoxPositions = () => {
         const textBoxes = textBoxContainer.querySelectorAll(".combar-text-box");
         textBoxes.forEach((element) => {
@@ -68,8 +73,6 @@ export async function showComments() {
           textBoxContainer.appendChild(textBox);
         } else { console.log("midTextNode.parentElement is null"); }
       });
-    })
-    .catch((error) => {
-      console.error("Error fetching selections based on", error);
-    });
+    }
+  });
 }

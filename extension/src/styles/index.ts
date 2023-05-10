@@ -9,7 +9,8 @@ export function getTextBoxStyle(topLoc: number) {
         top: `${topLoc}px`,
         right: "0",
         padding: "10px",
-        backgroundColor: "white",
-        border: "1px solid black",
+        backgroundColor: "rgba(173, 216, 230, 0.5)",
+        zIndex: "2147483647",
+        resize: "none",
     }
 }

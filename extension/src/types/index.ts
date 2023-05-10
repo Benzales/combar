@@ -7,7 +7,7 @@ export type Comment = {
   selectedText: string;
 };
 
-export type Request = {
+export type ApiRequestInfo = {
   url: string;
   method: string;
   body: any;

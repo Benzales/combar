@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
   entry: {
     popup: path.join(__dirname, 'src', 'popup/Popup.tsx'),
-    contentScript: path.join(__dirname, 'src', 'content_scripts/ContentScript.tsx'),
+    contentScript: path.join(__dirname, 'src', 'content_scripts/commentHandler.ts'),
     background: path.join(__dirname, 'src', 'background/background.ts'),
   },
   output: {
@@ -34,6 +34,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: './public/manifest.json', to: './' },
+        { from: './public/combar.png', to: './' }
       ],
     }),
   ],

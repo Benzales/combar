@@ -1,6 +1,8 @@
+import { ApiRequestInfo } from "../types";
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "request") {
-    apiRequest(request.request)
+  if (request.action === "apiRequest") {
+    apiRequest(request.apiRequestInfo)
       .then((data: any) => {
         sendResponse(data);
       })
@@ -11,16 +13,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-async function apiRequest( request: Request) {
+async function apiRequest( apiRequestInfo: ApiRequestInfo) {
+  console.log("apiRequest", apiRequestInfo);
   const requestConfig: RequestInit = {
-    method: request.method,
+    method: apiRequestInfo.method,
     headers: {
       "Content-Type": "application/json",
     }
   };
-  if(request.body !== null) requestConfig.body = JSON.stringify(request.body);
+  if(apiRequestInfo.body !== null) requestConfig.body = JSON.stringify(apiRequestInfo.body);
   
-  const response = await fetch("http://localhost:5000" + request.url, requestConfig);
+  const response = await fetch("http://localhost:5000" + apiRequestInfo.url, requestConfig);
 
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`;

@@ -1,16 +1,16 @@
-export const selectionStyle = {
-    backgroundColor: "yellow",
-    color: "black",
-};
+import styled from "styled-components";
 
-export function getTextBoxStyle(topLoc: number) {
-    return {
-        position: "absolute",
-        top: `${topLoc}px`,
-        right: "0",
-        padding: "10px",
-        backgroundColor: "rgba(173, 216, 230, 0.5)",
-        zIndex: "2147483647",
-        resize: "none",
-    }
-}
+export const Sidebar = styled.div`
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  height: 60vh;
+  width: 230px; 
+  transform: translateY(-50%);
+  background-color: #f5f5f5;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+`;

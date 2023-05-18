@@ -1,30 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import { Sidebar } from '../styles';
 import CommentLoader from './CommentLoader';
 import CommentPoster from './CommentPoster';
 
-const Sidebar = styled.div`
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  height: 60vh;
-  width: 230px; 
-  transform: translateY(-50%);
-  background-color: #f5f5f5;
-  padding: 16px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-`;
+export const IsPostingContext = React.createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined>(undefined);
 
 const Combar: React.FC = () => {
+  const [isPosting, setIsPosting] = useState<boolean>(false);
+
   return (
-    <Sidebar>
-      <h1>Combar</h1>
-      <CommentPoster />
-      <CommentLoader />
-    </Sidebar>
+    <IsPostingContext.Provider value={[isPosting, setIsPosting]}>
+        <Sidebar>
+            <h1>Combar</h1>
+            <CommentPoster />
+            <CommentLoader />
+        </Sidebar>
+    </IsPostingContext.Provider>
+        
   );
 };
 

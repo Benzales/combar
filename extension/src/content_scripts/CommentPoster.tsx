@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { IsPostingContext } from './CommentHandler';
+import { IsPostingContext } from './Combar';
 import { selectText } from './textSelector';
 import { Comment } from '../types';
 

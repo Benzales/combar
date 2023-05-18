@@ -3,6 +3,8 @@
 * Chrome extension that allows users to select text and create associated text boxes in the margins of webpages
 * Supplementary hub where users will be recommended personalized content based on their comments and interests
 
+Here is the [combar document](https://docs.google.com/document/d/1kts1oi0CWz9H75kTNUMazHNuUpgKf710yVnz8ZKRJvM/edit?usp=sharing) that outlines future features, use cases, marketing strategies, legal notes, and any brainstorming. 
+
 ## Extension
 ### Framework: [**React**](https://react.dev/)
 * Component-based architecture is easy to manage/scale

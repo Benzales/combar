@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Comments from './Comments';
+import CommentLoader from './CommentLoader';
+import CommentPoster from './CommentPoster';
 
 const Sidebar = styled.div`
   position: fixed;
@@ -21,7 +22,8 @@ const Combar: React.FC = () => {
   return (
     <Sidebar>
       <h1>Combar</h1>
-      <Comments />
+      <CommentPoster />
+      <CommentLoader />
     </Sidebar>
   );
 };

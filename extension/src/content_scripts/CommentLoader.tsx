@@ -1,7 +1,7 @@
 import React from 'react';
 import { Comment, ApiRequestInfo } from '../types';
 
-const Comments: React.FC = () => {
+const CommentLoader: React.FC = () => {
   const [comments, setComments] = React.useState<Comment[]>([]);
 
   React.useEffect(() => {
@@ -26,4 +26,4 @@ const Comments: React.FC = () => {
   );
 };
   
-export default Comments;
+export default CommentLoader;

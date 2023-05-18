@@ -67,7 +67,7 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
         pathsToTextNode: domPaths,
         startOffset: range.startOffset,
         endOffset: range.endOffset,
-        commentText: "",
+        commentText: "pre-filled comment text",
         selectedText: selection.toString(),
       };
       return comment;
@@ -75,4 +75,3 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
       console.error("No text nodes found");
     }
   }
-  

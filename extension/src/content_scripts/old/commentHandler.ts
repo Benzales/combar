@@ -1,7 +1,7 @@
 import { showComments, createTextBox } from "./commentLoader";
-import { selectText } from './textSelector';
-import { Comment } from '../types'; 
-import { getTextBoxStyle } from "../styles";
+import { selectText } from '../textSelector';
+import { Comment } from '../../types'; 
+import { getTextBoxStyle } from "../../styles";
 
 // create container for all text boxes
 const shadowHost = document.createElement('div');

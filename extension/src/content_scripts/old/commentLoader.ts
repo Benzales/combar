@@ -1,6 +1,6 @@
 import { create } from "domain";
-import { getTextBoxStyle } from "../styles";
-import { Comment, ApiRequestInfo } from "../types";
+import { getTextBoxStyle } from "../../styles";
+import { Comment, ApiRequestInfo } from "../../types";
 
 function findTextNodeByDomPath( domPath: string ): Text | null {
   const element = document.querySelector(domPath);
@@ -37,7 +37,7 @@ function getVerticalPos(comment: Comment): number {
 export function createTextBox(comment: Comment): HTMLTextAreaElement {
   const textBox: HTMLTextAreaElement = document.createElement("textarea");
   textBox.value = comment.commentText;
-  textBox.rows = 1; // Set the initial number of rows
+  textBox.rows = 1;
   textBox.classList.add("combar-text-box");
   if (comment.commentText.length > 0) textBox.readOnly = true;
   const verticalPos: number = getVerticalPos(comment);

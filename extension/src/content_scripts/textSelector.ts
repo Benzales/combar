@@ -67,7 +67,7 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
         pathsToTextNode: domPaths,
         startOffset: range.startOffset,
         endOffset: range.endOffset,
-        commentText: "pre-filled comment text",
+        commentText: "error occured while creating comment",
         selectedText: selection.toString(),
       };
       return comment;

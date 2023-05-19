@@ -1,13 +1,11 @@
 import React, { useContext, useState} from 'react';
-import { IsPostingContext } from './Combar';
 import { Comment, ApiRequestInfo } from '../types';
 
-const CommentLoader: React.FC = () => {
-  const isPostingContext = useContext(IsPostingContext);
-  if (!isPostingContext) {
-    throw new Error('CommentPoster must be used within an IsPostingContext provider');
-  }
-  const [isPosting, setIsPosting] = isPostingContext;
+interface CommentLoaderProps {
+    isPosting: boolean;
+}
+
+const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
   const [comments, setComments] = useState<Comment[]>([]);
 
   React.useEffect(() => {

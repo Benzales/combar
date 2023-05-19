@@ -1,6 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const Sidebar = styled.div`
+interface SidebarProps {
+  isSelecting: boolean;
+}
+
+export const Sidebar = styled.div<SidebarProps>`
   position: fixed;
   top: 50%;
   right: 20px;
@@ -13,4 +17,5 @@ export const Sidebar = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  opacity: ${props => props.isSelecting ? 0.2 : 1}; // adjust as necessary
 `;

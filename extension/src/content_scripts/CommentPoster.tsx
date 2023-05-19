@@ -1,26 +1,32 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { IsPostingContext } from './Combar';
 import { selectText } from './textSelector';
 import { Comment } from '../types';
 
-const CommentPoster: React.FC = () => {
-    const isPostingContext = useContext(IsPostingContext);
-    if (!isPostingContext) {
-        throw new Error('CommentPoster must be used within an IsPostingContext provider');
-    }
-    const [isPosting, setIsPosting] = isPostingContext;
-    const [newComment, setNewComment] = useState<Comment | undefined>(undefined);
+interface CommentPosterProps {
+    isPosting: boolean;
+    setIsPosting: React.Dispatch<React.SetStateAction<boolean>>;
+    isSelecting: boolean;
+    setIsSelecting: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const CommentPoster: React.FC<CommentPosterProps> = ({ isPosting, setIsPosting, setIsSelecting}) => {
+    const [newComment, setNewComment] = useState<Comment>();
     const [userInput, setUserInput] = useState<string>('');
+    const [selectedText, setSelectedText] = useState<string>('');
+
+    const handleCommentClick = () => {
+        setIsSelecting(true);
+        document.addEventListener("mouseup", handleMouseUp);
+    };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserInput(event.target.value);
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handlePostClick = (event: React.FormEvent) => {
         event.preventDefault();
         const updatedComment = {
             ...newComment,
-            commentText: userInput, 
+            commentText: userInput,
         };
         const apiRequestInfo = {
             url: "/api/comments",
@@ -37,6 +43,7 @@ const CommentPoster: React.FC = () => {
     const handleMouseUp = async () => {
         const selection = window.getSelection();
         if (selection && selection.toString().length > 0) {
+            setIsSelecting(false);
             document.removeEventListener("mouseup", handleMouseUp);
             const _newComment: Comment | undefined = await selectText(selection);
             if (_newComment) {
@@ -44,30 +51,29 @@ const CommentPoster: React.FC = () => {
                 setIsPosting(true);
             }
         }
-    }
-
-    useEffect(() => {
-        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-            if (request.action === 'select-text') {
-                document.addEventListener("mouseup", handleMouseUp);
-            }
-        });
-    }, []);
+    };
 
     return (
-        <div>
-            {isPosting &&
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Type your comment..."
-                        value={userInput}
-                        onChange={handleInputChange}
-                    />
-                    <button type="submit">Submit</button>
-                </form>
+        <>
+            {isPosting ?
+                <>
+                    <p> Selected Text: { selectedText }</p>
+                    <form onSubmit={handlePostClick}>
+                        <input
+                            type="text"
+                            placeholder="Type your comment..."
+                            value={userInput}
+                            onChange={handleInputChange}
+                        />
+                        <button type="submit"> Post </button>
+                    </form>
+                </>
+                :
+                <>
+                    <button onClick={handleCommentClick}> Comment </button>
+                </>
             }
-        </div>
+        </>
     )
 };
 

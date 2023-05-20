@@ -1,6 +1,6 @@
 # combar
 *Universal comment bar on **EVERY** webpage*
-* Chrome extension that allows users to select text and create associated text boxes in the margins of webpages
+* Chrome extension that allows users to select text and create comments in the margins of webpages
 * Supplementary hub where users will be recommended personalized content based on their comments and interests
 
 Here is the [combar document](https://docs.google.com/document/d/1kts1oi0CWz9H75kTNUMazHNuUpgKf710yVnz8ZKRJvM/edit?usp=sharing) that outlines future features, use cases, marketing strategies, legal notes, and any brainstorming. 
@@ -110,10 +110,10 @@ Remember to replace `"app"` with the actual name or path of your Flask applicati
 
 4. **Create a New Database**: In pgAdmin, right-click on `Databases` under the server tree and click `Create` > `Database...`. Provide a name for your database, then click `Save`.
 
-5. **Configure Flask to use PostgreSQL**: In your Flask application's configuration, modify the `SQLALCHEMY_DATABASE_URI` to match the connection string of the database you've just created. If your database is locally hosted, it should look like this:
+5. **Specify URI of local database**: In the backend folder create a file named `.env` and the following:
 
-    ```python
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:your_password@localhost/your_database'
+    ```env
+    export DATABASE_URL="postgresql://postgres:your_password@localhost/your_database"
     ```
 
 Replace `'your_password'` with the PostgreSQL superuser password you created during the PostgreSQL installation, and `'your_database'` with the name of the database you created in pgAdmin.

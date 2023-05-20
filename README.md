@@ -1,6 +1,6 @@
 # combar
 *Universal comment bar on **EVERY** webpage*
-* Chrome extension that allows users to select text and create associated text boxes in the margins of webpages
+* Chrome extension that allows users to select text and create comments in the margins of webpages
 * Supplementary hub where users will be recommended personalized content based on their comments and interests
 
 Here is the [combar document](https://docs.google.com/document/d/1kts1oi0CWz9H75kTNUMazHNuUpgKf710yVnz8ZKRJvM/edit?usp=sharing) that outlines future features, use cases, marketing strategies, legal notes, and any brainstorming. 
@@ -26,10 +26,8 @@ Here is the [combar document](https://docs.google.com/document/d/1kts1oi0CWz9H75
 
 ## Setup
 
-1. **Install Git and clone the repository**: If you haven't already, you'll need to install Git on your machine. You can download the installer from the [official Git website](https://git-scm.com/downloads). Once Git is installed, you can clone the repository by running the following command in your terminal, replacing `your-username` with your actual GitHub username:
-
-   ```powershell
-   git clone https://github.com/your-username/Comment-Bar.git
+1. **Install VSCode from the [download page](https://code.visualstudio.com/Download)
+2. **Install Git and clone the repository**: If you haven't already, you'll need to install Git on your machine. You can download the installer from the [official Git website](https://git-scm.com/downloads). Once Git is installed, you can clone the repository by running `git clone` followed by the https link to the repo in the `<> Code` dropdown above. 
 
 ### Extension
 
@@ -92,33 +90,27 @@ This will create a `dist` directory containing the built extension.
     $env:FLASK_ENV="development"
     ```
 
-6. **Run the Flask application**: Use the following command to start the Flask development server. You should now be able to access your Flask application at `http://localhost:5000`.
-
-    ```powershell
-    flask run
-    ```
-
-Remember to replace `"app"` with the actual name or path of your Flask application file if it's not named `app.py`.
-
 ### Database
 
-1. **Download and Install PostgreSQL**: Visit the official PostgreSQL website and download the installer based on your operating system. This will also include pgAdmin, a graphical user interface for managing PostgreSQL databases.
+1. **Download and Install PostgreSQL**: Visit the [official PostgreSQL website](https://www.postgresql.org/download/) and download the installer based on your operating system. This will also include pgAdmin, a graphical user interface for managing PostgreSQL databases.
 
 2. **Setup PostgreSQL**: Launch the PostgreSQL installer. During the setup process, you will be asked to provide a password for the PostgreSQL superuser (`postgres`). Please remember this password as it will be used to connect to the PostgreSQL server.
 
 3. **Launch pgAdmin**: After installation, open pgAdmin. The first time you launch it, you will be asked to enter the password you created during the PostgreSQL installation.
 
-4. **Create a New Database**: In pgAdmin, right-click on `Databases` under the server tree and click `Create` > `Database...`. Provide a name for your database, then click `Save`.
+4. **Register a New Server**: In pgAdmin, right-click on `Databases` under the server tree and click `Register` > `Server...`. Provide a name for your server. Then, navigate to the `Connection` tab and input `localhost` for the Host name and input your `Password`. 
 
-5. **Configure Flask to use PostgreSQL**: In your Flask application's configuration, modify the `SQLALCHEMY_DATABASE_URI` to match the connection string of the database you've just created. If your database is locally hosted, it should look like this:
+5. **Create a New Database**: In pgAdmin, right-click on `Databases` under the server tree and click `Create` > `Database...`. Provide a name for your database, then click `Save`.
 
-    ```python
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:your_password@localhost/your_database'
+6. **Specify URI of local database**: In the backend folder, create a file named `.env`, then add the following line:
+
+    ```env
+    export DATABASE_URL="postgresql://postgres:your_password@localhost/your_database"
     ```
 
 Replace `'your_password'` with the PostgreSQL superuser password you created during the PostgreSQL installation, and `'your_database'` with the name of the database you created in pgAdmin.
 
-6. **Initialize your Database**: Now that your Flask application is configured to use PostgreSQL, you can initialize your database using the SQLAlchemy ORM included in Flask. In your terminal or command prompt, while in your virtual environment, run the following command:
+7. **Initialize your Database**: Now that your Flask application is configured to use PostgreSQL, you can initialize your database using the SQLAlchemy ORM included in Flask. In your terminal or command prompt, while in your virtual environment, run the following command:
 
     ```powershell
     flask db init
@@ -128,7 +120,7 @@ Replace `'your_password'` with the PostgreSQL superuser password you created dur
 
 This will create the necessary tables and relationships in your PostgreSQL database based on the models defined in your Flask application.
 
-7. **Run the Flask Application**: You can now start your Flask application with the following command:
+8. **Run the Flask Application**: You can now start your Flask application with the following command:
 
     ```powershell
     flask run

@@ -29,7 +29,7 @@ Here is the [combar document](https://docs.google.com/document/d/1kts1oi0CWz9H75
 1. **Install Git and clone the repository**: If you haven't already, you'll need to install Git on your machine. You can download the installer from the [official Git website](https://git-scm.com/downloads). Once Git is installed, you can clone the repository by running the following command in your terminal, replacing `your-username` with your actual GitHub username:
 
    ```powershell
-   git clone https://github.com/your-username/Comment-Bar.git
+   git clone https://github.com/your-username/combar.git
 
 ### Extension
 

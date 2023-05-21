@@ -14,7 +14,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 async function apiRequest( apiRequestInfo: ApiRequestInfo) {
-  console.log("apiRequest", apiRequestInfo);
   const requestConfig: RequestInit = {
     method: apiRequestInfo.method,
     headers: {

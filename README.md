@@ -126,4 +126,4 @@ This will create the necessary tables and relationships in your PostgreSQL datab
     flask run
     ```
 
-You should now be able to interact with your Flask application and PostgreSQL database. Remember, any changes to your Flask application's models will
+You should now be able to interact with your Flask application and PostgreSQL database.

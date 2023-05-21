@@ -21,7 +21,7 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     url_id = db.Column(db.Integer, db.ForeignKey('url.id'), nullable=False)
-    paths_to_text_node = db.Column(JSON, nullable=False)
+    path_to_common_ancestor = db.Column(JSON, nullable=False)
     start_offset = db.Column(db.Integer, nullable=False)
     end_offset = db.Column(db.Integer, nullable=False)
     comment_text = db.Column(db.String, nullable=False)

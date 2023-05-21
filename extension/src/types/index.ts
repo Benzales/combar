@@ -1,6 +1,6 @@
 export type Comment = {
   url: string;
-  pathsToTextNode: string[];
+  pathToCommonAncestor: string;
   startOffset: number;
   endOffset: number;
   commentText: string;

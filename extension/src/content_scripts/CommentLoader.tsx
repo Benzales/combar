@@ -1,67 +1,89 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Comment, ApiRequestInfo } from '../types';
 import { CommentBox, CommentHeader, ProfilePic, UserName, CommentText } from '../styles';
 import profilepic from '../styles/profilepic.png';
+import { stat } from 'fs';
 
 interface CommentLoaderProps {
-    isPosting: boolean;
+  isPosting: boolean;
 }
 
 const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const findTextNodesByDomPaths = ( domPaths: string[] ): Text[] => {
-    let textNodes: Text[] = domPaths.flatMap((domPath) => {
-      const element = document.querySelector(domPath);
-      if (!element) return [];
-    
-      let textNode: Text | null = null;
-    
-      const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-    
-      do {
-        const node = treeWalker.currentNode as Text;
-        if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-          textNode = node;
+  const findNode = (domPath: string): HTMLElement | null => {
+    try {
+      const node = document.querySelector(domPath) as HTMLElement;
+      return node;
+    } catch (e) {
+      console.error("Invalid DOM Path", e);
+      return null;
+    }
+  }
+
+  const highlightSelection = (ancestor: HTMLElement, relativeStartOffset: number, relativeEndOffset: number): void => {
+    let charCount = 0;
+    let startOffset: number = -1;
+    let endOffset: number = -1;
+    let textNodes: Node[] = [];
+
+    (function findNodes(node: Node) {
+      for (let child = node.firstChild; child; child = child.nextSibling) {
+        if (child.nodeType === Node.TEXT_NODE && child.textContent && endOffset < 0) {
+          const nextCharCount = charCount + child.textContent.length;
+          const startNodeHere: boolean = startOffset < 0 && relativeStartOffset >= charCount && relativeStartOffset <= nextCharCount;
+          const endNodeHere: boolean = endOffset < 0 && relativeEndOffset >= charCount && relativeEndOffset <= nextCharCount;
+          if (startNodeHere) startOffset = relativeStartOffset - charCount;
+          if (endNodeHere) endOffset = relativeEndOffset - charCount;
+
+          // once we have found the first node
+          if (startOffset >= 0) textNodes.push(child);
+          charCount = nextCharCount;
+        } else if (endOffset < 0) {
+          findNodes(child);
+        } else {
           break;
         }
-      } while (treeWalker.nextNode());
-      return textNode ? [textNode] : [];
-    });
-  
-    return textNodes;
-  }
+      }
+    })(ancestor);
+
+    // Check if both nodes were found
+    if (startOffset >= 0 && endOffset >= 0) {
+      textNodes.forEach((textNode, index) => {
+        const highlight = document.createElement("span");
+        Object.assign(highlight.style, {
+          backgroundColor: "yellow",
+        });
+
+        const subRange = document.createRange();
+        subRange.setStart(textNode, index === 0 ? startOffset : 0);
+        subRange.setEnd(textNode, index === textNodes.length - 1 ? endOffset : (textNode as Text).textContent?.length || 0);
+
+        subRange.surroundContents(highlight);
+
+      });
+    }
+  };
 
   const handleMouseEnter = (comment: Comment) => {
-    const range = new Range();
-    
-    const textNodes: Text[] = findTextNodesByDomPaths(comment.pathsToTextNode);
-    if(textNodes.length && textNodes[0].parentElement) {
-      const boundingRect = textNodes[0].parentElement.getBoundingClientRect();
-      const verticalPos = boundingRect.top;
-      
-      window.scroll({
-        top: verticalPos,
-        behavior: 'smooth'
-      });
-    
-      range.setStart(textNodes[0], comment.startOffset);
-      range.setEnd(textNodes[textNodes.length - 1], comment.endOffset);
-  
-      const selection = window.getSelection();
-      if(selection) {
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
+    const commonAncestorElement: HTMLElement | null = findNode(comment.pathToCommonAncestor);
+    if (commonAncestorElement) {
+      highlightSelection(commonAncestorElement, comment.startOffset, comment.endOffset);
 
-      // console.log('comment', comment);
-      // console.log('text nodes', textNodes);
+      // if (startNode) {
+      //   const boundingRect = (startNode as HTMLElement).getBoundingClientRect();
+      //   const verticalPos = boundingRect.top;
+
+      //   window.scroll({
+      //     top: verticalPos,
+      //     behavior: 'smooth'
+      //   });
+      // }
     }
-      
   }
-  
+
   const handleMouseLeave = (comment: Comment) => {
-    console.log('bye', comment.selectedText);
+    
   }
 
   useEffect(() => {
@@ -72,7 +94,7 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
       body: null,
     }
     chrome.runtime.sendMessage({ action: 'apiRequest', apiRequestInfo: apiRequestInfo }, (response) => {
-      if(response.error) console.error(response.error);
+      if (response.error) console.error(response.error);
       else setComments(response as Comment[]);
     });
   }, [isPosting]);
@@ -80,7 +102,7 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
   return (
     <>
       {comments.map((comment, index) => (
-        <CommentBox 
+        <CommentBox
           key={index}
           onMouseEnter={() => handleMouseEnter(comment)}
           onMouseLeave={() => handleMouseLeave(comment)}
@@ -95,5 +117,5 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
     </>
   );
 };
-  
+
 export default CommentLoader;

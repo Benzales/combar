@@ -22,7 +22,7 @@ def create_comment():
     # Create a new comment record and associate it with the Url record
     new_comment = Comment(
         url_id=url_record.id,
-        paths_to_text_node=data['pathsToTextNode'],
+        path_to_common_ancestor=data['pathToCommonAncestor'],
         start_offset=data['startOffset'],
         end_offset=data['endOffset'],
         comment_text=data['commentText'],
@@ -45,7 +45,7 @@ def get_comments_by_url(url_string):
             {
                 'id': comment.id,
                 'url': url_record.url,
-                'pathsToTextNode': comment.paths_to_text_node,
+                'pathToCommonAncestor': comment.path_to_common_ancestor,
                 'startOffset': comment.start_offset,
                 'endOffset': comment.end_offset,
                 'commentText': comment.comment_text,

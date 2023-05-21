@@ -21,6 +21,8 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
     }
   }
 
+  const uniqueHighlightClass = 'unique-combar-highlight-class';
+
   const highlightSelection = (ancestor: HTMLElement, relativeStartOffset: number, relativeEndOffset: number): void => {
     let charCount = 0;
     let startOffset: number = -1;
@@ -51,6 +53,7 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
     if (startOffset >= 0 && endOffset >= 0) {
       textNodes.forEach((textNode, index) => {
         const highlight = document.createElement("span");
+        highlight.className = uniqueHighlightClass;
         Object.assign(highlight.style, {
           backgroundColor: "yellow",
         });
@@ -62,6 +65,18 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
         subRange.surroundContents(highlight);
 
       });
+    }
+  };
+
+  const unhighlightSelection = (): void => {
+    const highlightedEls = document.getElementsByClassName(uniqueHighlightClass); // Get all elements with the unique class
+    for (let i = highlightedEls.length - 1; i >= 0; i--) { // Loop through elements in reverse to avoid issues with changing list
+      let highlightedEl = highlightedEls[i];
+      let parent = highlightedEl.parentNode;
+      while (highlightedEl.firstChild) {
+        parent?.insertBefore(highlightedEl.firstChild, highlightedEl);
+      }
+      parent?.removeChild(highlightedEl);
     }
   };
 
@@ -83,7 +98,7 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
   }
 
   const handleMouseLeave = (comment: Comment) => {
-    
+    unhighlightSelection();
   }
 
   useEffect(() => {

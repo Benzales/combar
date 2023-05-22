@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Comment, ApiRequestInfo } from '../types';
 import { CommentBox, CommentHeader, ProfilePic, UserName, CommentText } from '../styles';
-import profilepic from '../styles/profilepic.png';
-import { stat } from 'fs';
 
 interface CommentLoaderProps {
   isPosting: boolean;
@@ -63,7 +61,6 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
         subRange.setEnd(textNode, index === textNodes.length - 1 ? endOffset : (textNode as Text).textContent?.length || 0);
 
         subRange.surroundContents(highlight);
-
       });
     }
   };
@@ -85,19 +82,21 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
     if (commonAncestorElement) {
       highlightSelection(commonAncestorElement, comment.startOffset, comment.endOffset);
 
-      // if (startNode) {
-      //   const boundingRect = (startNode as HTMLElement).getBoundingClientRect();
-      //   const verticalPos = boundingRect.top;
+      const firstHighlight = document.getElementsByClassName(uniqueHighlightClass)[0];
+      if (firstHighlight) {
+        const boundingRect = firstHighlight.getBoundingClientRect();
+        const verticalPos = window.scrollY + boundingRect.top;
+        const offset = 250;
 
-      //   window.scroll({
-      //     top: verticalPos,
-      //     behavior: 'smooth'
-      //   });
-      // }
+        window.scroll({
+          top: verticalPos - offset,
+          behavior: 'smooth'
+        });
+      }
     }
   }
 
-  const handleMouseLeave = (comment: Comment) => {
+  const handleMouseLeave = () => {
     unhighlightSelection();
   }
 
@@ -120,7 +119,7 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
         <CommentBox
           key={index}
           onMouseEnter={() => handleMouseEnter(comment)}
-          onMouseLeave={() => handleMouseLeave(comment)}
+          onMouseLeave={() => handleMouseLeave()}
         >
           <CommentHeader>
             <ProfilePic />

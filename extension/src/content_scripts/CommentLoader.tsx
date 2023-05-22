@@ -109,7 +109,10 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
     }
     chrome.runtime.sendMessage({ action: 'apiRequest', apiRequestInfo: apiRequestInfo }, (response) => {
       if (response.error) console.error(response.error);
-      else setComments(response as Comment[]);
+      else {
+        console.log("Comments received from server:", response);
+        setComments(response as Comment[]);
+      } 
     });
   }, [isPosting]);
 

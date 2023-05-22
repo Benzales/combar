@@ -77,7 +77,7 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
   const [startOffset, endOffset] = getSelectionOffsets(range, commonAncestorElement);
 
   let comment: Comment = {
-    url: window.location.href,
+    url: encodeURIComponent(window.location.href),
     pathToCommonAncestor: getDomPath(commonAncestorElement),
     startOffset: startOffset,
     endOffset: endOffset,

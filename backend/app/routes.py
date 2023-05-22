@@ -10,7 +10,6 @@ def create_comment():
     data = request.get_json()
     url_string = data['url']
     decoded_url = unquote(url_string)
-    print("\n\nPOST decoded url:", decoded_url, "\n\n")
 
     # Check if the URL already exists in the database
     url_record = Url.query.filter_by(url=decoded_url).first()
@@ -38,8 +37,6 @@ def create_comment():
 
 @api_bp.route('/api/urls/<path:url_string>/comments', methods=['GET'])
 def get_comments_by_url(url_string):
-    print("\n\nGET decoded url:", url_string, "\n\n")
-
     url_record = Url.query.filter_by(url=url_string).first()
 
     response = []

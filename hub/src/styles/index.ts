@@ -59,3 +59,6 @@ export const UserName = styled.p`
 export const CommentText = styled.p`
   margin: 0;
 `;
+export const CenteredHeading = styled.h1`
+  text-align: center;
+`;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Url, Comment } from './types'
-import { CommentContainer, CommentBox, CommentHeader, ProfilePic, UserName, CommentText } from './styles';
+import { CommentContainer, CommentBox, CommentHeader, ProfilePic, UserName, CommentText, CenteredHeading } from './styles';
 
 function App() {
   const [urlCommentsMap, setUrlCommentsMap] = useState<Record<string, Comment[]>>({});
@@ -39,7 +39,7 @@ function App() {
   return (
     <div>
       <CommentContainer>
-        <h1>Combar Hub</h1>
+        <CenteredHeading>Combar Hub</CenteredHeading>
         {Object.keys(urlCommentsMap).map((url, index) => (
           <div key={index}>
             <a href={url} target="_blank" rel="noopener noreferrer">{urlTitleMap[url]}</a>

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { Link } from 'react-router-dom';
 // Styled Header
 const HeaderContainer = styled.header`
   display: flex;
@@ -34,9 +34,8 @@ function Header() {
     <HeaderContainer>
       <Logo>combar</Logo>
       <Navigation>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
       </Navigation>
     </HeaderContainer>
   );

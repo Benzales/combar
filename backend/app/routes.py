@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import Comment, Url
 from app import db
-from urllib.parse import unquote
+from urllib.parse import unquote, urldefrag
 
 api_bp = Blueprint('api', __name__)
 
@@ -9,14 +9,14 @@ api_bp = Blueprint('api', __name__)
 def create_comment():
     data = request.get_json()
     url_string = data['url']
-    decoded_url = unquote(url_string)
+    url_without_fragment, _ = urldefrag(unquote(url_string))
 
     # Check if the URL already exists in the database
-    url_record = Url.query.filter_by(url=decoded_url).first()
+    url_record = Url.query.filter_by(url=url_without_fragment).first()
 
     # If the URL does not exist, create a new Url record
     if url_record is None:
-        url_record = Url(url=decoded_url)
+        url_record = Url(url=url_without_fragment)
         db.session.add(url_record)
         db.session.commit()
 
@@ -37,7 +37,8 @@ def create_comment():
 
 @api_bp.route('/api/urls/<path:url_string>/comments', methods=['GET'])
 def get_comments_by_url(url_string):
-    url_record = Url.query.filter_by(url=url_string).first()
+    url_without_fragment, _ = urldefrag(url_string)
+    url_record = Url.query.filter_by(url=url_without_fragment).first()
 
     response = []
 

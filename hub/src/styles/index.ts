@@ -83,7 +83,7 @@ export const LogoPic = styled.div`
   width: 5em; /* Increase the value to make it wider */
   height: 5em; /* Increase the value to make it taller */
   border-radius: 50%;
-  background-image: url(./pracLogo.jpg);
+  background-image: url(/pracLogo.jpg);
   background-size: cover;
   background-position: center;
   background-color: #ccc;

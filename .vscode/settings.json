@@ -1,11 +1,9 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.python",
+        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.tabSize": 4,
         "editor.insertSpaces": true
     },
-    "python.formatting.provider": "none",
-    
     "[typescript]": {
         "editor.tabSize": 2,
         "editor.insertSpaces": true
@@ -22,4 +20,5 @@
         "editor.tabSize": 2,
         "editor.insertSpaces": true
     },
+    "python.formatting.provider": "none",
 }

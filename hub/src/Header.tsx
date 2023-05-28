@@ -1,6 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
+import Profile from './Profile';
+import {ProfilePic} from './styles';
 // Styled Header
 const HeaderContainer = styled.header`
   display: flex;
@@ -30,13 +33,36 @@ const Navigation = styled.nav`
 
 // Header component
 function Header() {
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  function openModal() {
+    setModalIsOpen(true);
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
+
   return (
     <HeaderContainer>
       <Logo>combar</Logo>
       <Navigation>
+
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
+        <ProfilePic onClick={openModal} />
       </Navigation>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+      >
+        <h2>Edit Profile</h2>
+        <button onClick={closeModal}>close</button>
+
+        <Profile />
+      </Modal>
     </HeaderContainer>
   );
 }

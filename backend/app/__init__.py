@@ -19,8 +19,13 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     
-    from app.routes import api_bp
-    app.register_blueprint(api_bp)
+    from .routes.urls import urls
+    from .routes.comments import comments
+    from .routes.users import users
+
+    app.register_blueprint(urls)
+    app.register_blueprint(comments)
+    app.register_blueprint(users)
 
     CORS(app, resources={r'/api/*': {'origins': '*'}})
 

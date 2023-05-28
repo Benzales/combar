@@ -11,6 +11,7 @@ export type Comment = {
   endOffset: number;
   commentText: string;
   selectedText: string;
+  username: string;
 };
 
 export type ApiRequestInfo = {

@@ -1,21 +1,34 @@
-import Header from './Header';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { About } from './About';
-import CommentLoader from './CommentLoader';
-import Profile from './Profile';
+import React, { createContext, useState } from 'react';
+import Header from "./Header";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { About } from "./About";
+import CommentLoader from "./CommentLoader";
+import { User } from "./types";
+
+interface UserContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}
+
+const UserContext = React.createContext<UserContextType>({
+  user: null,
+  setUser: () => {},
+});
 
 function App() {
-
+  const [user, setUser] = useState<User | null>(null);
+  
   return (
-    <Router>
-      <Header />
-      <Profile />
-      <Routes>
-        <Route path="/" element={<CommentLoader />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </Router>
+    <UserContext.Provider value={{ user, setUser }}>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<CommentLoader />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </Router>
+    </UserContext.Provider>
   );
 }
 
-export default App;
+export { UserContext, App as default };

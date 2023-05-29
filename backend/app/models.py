@@ -8,9 +8,10 @@ followers = db.Table('followers',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(16), nullable=False, unique=True)
+    google_id = db.Column(db.String(50), unique=True)
+    username = db.Column(db.String(16), unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    full_name = db.Column(db.String(64))
+    name = db.Column(db.String(64))
     registration_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     last_active = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     bio = db.Column(db.String(500))

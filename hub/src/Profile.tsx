@@ -1,54 +1,89 @@
-import React, { useState } from 'react';
-
-type UserFormState = {
-  username: string;
-  email: string;
-  full_name: string;
-  bio: string;
-};
-
+import React, { useState, useEffect, useContext } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { User } from "./types";
+import { UserContext } from "./App";
 
 const Register: React.FC = () => {
-  const [form, setForm] = useState<UserFormState>({
-    username: '',
-    email: '',
-    full_name: '',
-    bio: '',
-  });
+  const { user, setUser } = useContext(UserContext);
+  const [newUser, setNewUser] = useState<User | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+  useEffect(() => {
+    setNewUser(user);
+  }, [user]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/api/users', {
-        method: 'POST',
+  const handleLogin = (googleToken: any) => {
+    if (googleToken) {
+      fetch("http://localhost:5000/api/users/google", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          Authorization: googleToken.credential,
         },
-        body: JSON.stringify(form),
-      });
-
-      const data = await response.json();
-      console.log(data);
-    } catch (err) {
-      console.error(err);
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data);
+        })
+        .catch(console.error);
     }
   };
 
+  const googleLoginButton = (
+    <GoogleLogin
+      data-testid="custom-google-login"
+      shape="pill"
+      size="large"
+      onSuccess={handleLogin}
+      onError={() => console.log("Google Login failed")}
+    />
+  );
+
+  const inputFields = [
+    { label: "Name", value: newUser?.name, key: "name" },
+    { label: "Email", value: newUser?.email, key: "email" },
+    { label: "Bio", value: newUser?.bio, key: "bio" },
+    { label: "Username", value: newUser?.username || "", key: "username" },
+  ];
+
+  const changeUserInfo = () => {
+    if (newUser) {
+      fetch("http://localhost:5000/api/users", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setUser(newUser);
+        })
+        .catch(console.error);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="username" onChange={handleChange} placeholder="Username" required />
-      <input type="email" name="email" onChange={handleChange} placeholder="Email" required />
-      <input type="text" name="full_name" onChange={handleChange} placeholder="Full Name" />
-      <input type="text" name="bio" onChange={handleChange} placeholder="Bio" />
-      <button type="submit">Register</button>
-    </form> 
+    <>
+      {newUser ? (
+        <>
+        {inputFields.map((field) => (
+          <label key={field.key}>
+            {field.label}:
+            <input
+              type="text"
+              value={field.value}
+              onChange={(e) => setNewUser({ ...newUser, [field.key]: e.target.value })}
+              onBlur={changeUserInfo}
+              onKeyDown={(e) => { if (e.key === 'Enter') changeUserInfo(); }}
+            />
+          </label>
+        ))}
+      </>
+      ) : (
+        googleLoginButton
+      )}
+    </>
   );
 };
 

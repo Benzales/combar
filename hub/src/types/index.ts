@@ -14,6 +14,14 @@ export type Comment = {
   username: string;
 };
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  bio: string;
+  username: string;
+}
+
 export type ApiRequestInfo = {
   url: string;
   method: string;

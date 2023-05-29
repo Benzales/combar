@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy_utils import EmailType
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -10,7 +11,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     google_id = db.Column(db.String(50), unique=True)
     username = db.Column(db.String(16), unique=True)
-    email = db.Column(db.String(120), nullable=False, unique=True)
+    email = db.Column(EmailType, nullable=False, unique=True)
     name = db.Column(db.String(64))
     registration_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     last_active = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())

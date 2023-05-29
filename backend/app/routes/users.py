@@ -1,14 +1,12 @@
 from flask import Blueprint, request, jsonify, abort
 from app.models import User
 from app import db
-from urllib.parse import unquote
-from bs4 import BeautifulSoup
 import requests
-from urllib.parse import unquote, urldefrag
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
+import re
 
 users = Blueprint('users', __name__)
 
@@ -19,6 +17,10 @@ def update_user():
     # Ensure all required fields are present
     if not all(k in data for k in ("username", "email")):
         return jsonify({"message": "Missing required field"}), 400
+
+    email = data.get('email')
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return jsonify({"message": "Invalid email format"}), 400
 
     user = User.query.get(data.get('id'))
     
@@ -72,31 +74,32 @@ def google_login():
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
-        # ID token is valid. Get the user's Google Account ID from the decoded token.
-        google_id = idinfo['sub']
-
-        # You can replace the code below with your existing user-handling logic
-        user = User.query.filter_by(google_id=google_id).first()
+        user = User.query.filter_by(google_id=idinfo['sub']).first()
 
         # If user does not exist, create a new user
         if not user:
+            # Generate the username from the email
+            username = idinfo['email'].split('@')[0][:11]
+            count = 0
+
+            # Check if this username already exists
+            while User.query.filter_by(username=username).first():
+                count += 1
+                username = f"{username}{count}"
+
             user = User(
+                username=username,
                 email=idinfo['email'],  
                 name=idinfo['name'],
-                google_id=google_id,
+                google_id=idinfo['sub'],
                 bio=""
             )
             db.session.add(user)
             db.session.commit()
-
-            username = ''
         
-        else: 
-            username = user.username
-
         return jsonify({
             'id': user.id,
-            'username': username,
+            'username': user.username,
             'email': user.email,
             'name': user.name,
             'bio': user.bio

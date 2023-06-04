@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify, abort, g
 from app.models import User
 from app import db
 import requests
@@ -7,11 +7,15 @@ from google.auth.transport import requests
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
 import re
+from app.auth import create_token, create_refresh_token, refresh_token
 
 users = Blueprint('users', __name__)
 
 @users.route('/api/users', methods=['PUT'])
 def update_user():
+    if g.user_id is None:
+        abort(401, 'Invalid token or token expired')
+
     data = request.get_json()
 
     # Ensure all required fields are present
@@ -47,9 +51,12 @@ def update_user():
     return jsonify({'message': 'User updated!'}), 200
 
 
-@users.route('/api/users/<string:id>', methods=['GET'])
-def get_user(id):
-    user = User.query.get(id)
+@users.route('/api/users', methods=['GET'])
+def get_user():
+    if g.user_id is None:
+        abort(401, 'Invalid token or token expired')
+    
+    user = User.query.get(g.user_id)
     if user is None:
         return jsonify({'message': 'User not found'}), 404
 
@@ -96,15 +103,28 @@ def google_login():
             )
             db.session.add(user)
             db.session.commit()
-        
-        return jsonify({
+    
+        jwt_token = create_token(user.id)
+        refresh_token = create_refresh_token(user.id)
+
+        response = jsonify({
             'id': user.id,
             'username': user.username,
             'email': user.email,
             'name': user.name,
-            'bio': user.bio
-        }), 200
+            'bio': user.bio,
+            'accesToken': jwt_token,
+            'refreshToken': refresh_token
+        })
+
+        return response, 200
 
     except ValueError:
         # Invalid token
         return jsonify({"message": "Invalid token."}), 400
+
+@users.route('/api/users/refresh', methods=['POST'])
+def refresh():
+    token = request.headers.get('Authorization')
+    return refresh_token(token)
+    

@@ -2,10 +2,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { User } from "./types";
 import { UserContext } from "./App";
+import getAccessToken from "./utils/auth";
+import apiRequest from "./utils/apiRequests";
 
 const Register: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
   const [newUser, setNewUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    apiRequest("api/users", "GET")
+      .then(data => setUser(data));
+  }, []);
 
   useEffect(() => {
     setNewUser(user);
@@ -22,6 +29,8 @@ const Register: React.FC = () => {
       })
         .then((res) => res.json())
         .then((data) => {
+          localStorage.setItem('accessToken', data.token);
+          localStorage.setItem('refreshToken', data.refreshToken);
           setUser(data);
         })
         .catch(console.error);
@@ -51,6 +60,7 @@ const Register: React.FC = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem('token') || '',
         },
         body: JSON.stringify(newUser),
       })

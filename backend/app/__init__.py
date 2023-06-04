@@ -1,11 +1,10 @@
-import click
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask.cli import with_appcontext
 from dotenv import load_dotenv
 from flask_cors import CORS
 from .config import Config
+from .auth import load_logged_in_user
 
 load_dotenv()
 
@@ -28,6 +27,8 @@ def create_app():
     app.register_blueprint(users)
 
     CORS(app, resources={r'/api/*': {'origins': '*'}})
+
+    app.before_request(load_logged_in_user)
 
     return app
 

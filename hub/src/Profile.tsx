@@ -56,21 +56,17 @@ const Register: React.FC = () => {
 
   const changeUserInfo = () => {
     if (newUser) {
-      fetch("http://localhost:5000/api/users", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem('token') || '',
-        },
-        body: JSON.stringify(newUser),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setUser(newUser);
-        })
+      apiRequest("api/users", "PUT", newUser)
+        .then(() => setUser(newUser))
         .catch(console.error);
     }
+  }
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setUser(null);
+    setNewUser(null);
   }
 
   return (
@@ -89,6 +85,7 @@ const Register: React.FC = () => {
             />
           </label>
         ))}
+        <button onClick={logout}>Logout</button>
       </>
       ) : (
         googleLoginButton

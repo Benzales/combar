@@ -1,4 +1,5 @@
 import jwt_decode from "jwt-decode";
+const extensionID = 'cmohnfemjhpjblloaehecbmpjoldmggc';
 
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refreshToken');
@@ -38,20 +39,16 @@ const getAccessToken = async () => {
       accessToken = await refreshAccessToken();
       if(!accessToken || accessToken === 'undefined') return;
   } else {
-      // Decode the token
       const decodedToken = jwt_decode(accessToken) as DecodedToken;
-
-      // Get the current time
       const currentTime = Date.now() / 1000;
-
-      // Check if the token will expire in the next few minutes
       const bufferTime = 5 * 60; // 5 minutes buffer time
       if (decodedToken.exp < (currentTime + bufferTime)) {
-          // Token is about to expire or has already expired, refresh it
           accessToken = await refreshAccessToken();
       }
   }
-
+  const refreshToken = localStorage.getItem('refreshToken');
+  window.postMessage({ type: "FROM_PAGE", accessToken: accessToken, refreshToken: refreshToken }, "*");
+  
   return accessToken;
 }
 

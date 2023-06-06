@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 from app.models import Comment, Url, User
 from app import db
 from urllib.parse import unquote
@@ -24,10 +24,16 @@ def create_comment():
         db.session.add(url_record)
         db.session.commit()
 
+    # Set to anonymous user if not logged in
+    user_id = 1
+    if g.user_id is not None:
+        print(g.user_id)
+        user_id = g.user_id
+
     # Create a new comment record and associate it with the Url record
     new_comment = Comment(
         url_id=url_record.id,
-        user_id = 1,
+        user_id = user_id,
         path_to_common_ancestor=data['pathToCommonAncestor'],
         start_offset=data['startOffset'],
         end_offset=data['endOffset'],

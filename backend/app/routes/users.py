@@ -26,7 +26,7 @@ def update_user():
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return jsonify({"message": "Invalid email format"}), 400
 
-    user = User.query.get(data.get('id'))
+    user = User.query.get(g.user_id)
     
     if not user:
         return jsonify({'message': 'User not found'}), 404

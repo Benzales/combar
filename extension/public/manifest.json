@@ -3,7 +3,7 @@
   "name": "Combar",
   "version": "1.0",
   "description": "universal comment bar on every webpage",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "browser_action": {
     "default_popup": "index.html",
     "default_icon": "./combar.png"

@@ -6,8 +6,13 @@ export type Comment = {
   commentText: string;
   selectedText: string;
   username: string;
+  id: number;
 };
 
+export type Reply = {
+  replyText: string;
+  username: string;
+}
 export type ApiRequestInfo = {
   url: string;
   method: string;

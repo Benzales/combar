@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, g
-from app.models import Comment, Url, User
+from app.models import Comment, Url, User, Reply
 from app import db
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
@@ -7,7 +7,7 @@ import requests
 from urllib.parse import unquote, urldefrag
 
 comments = Blueprint('comments', __name__)
-
+replies = Blueprint('replies', __name__)
 
 @comments.route('/api/comments', methods=['POST'])
 def create_comment():
@@ -60,6 +60,7 @@ def get_comments_by_url(url_string):
             user_record = User.query.filter_by(id=comment.user_id).first()
 
             response.append({
+                'id': comment.id,
                 'username': user_record.username,
                 'url': url_record.url,
                 'pathToCommonAncestor': comment.path_to_common_ancestor,
@@ -70,3 +71,24 @@ def get_comments_by_url(url_string):
             })
 
     return jsonify(response), 200
+
+@replies.route('/api/comments/<int:comment_id>/replies', methods=['POST'])
+def create_reply(comment_id):
+    data = request.get_json()
+
+    # Set to anonymous user if not logged in
+    user_id = 1
+    if g.user_id is not None:
+        user_id = g.user_id
+
+    # Create a new reply record and associate it with the Comment record
+    new_reply = Reply(
+        comment_id=comment_id,
+        user_id = user_id,
+        reply_text=data['replyText'],
+    )
+
+    db.session.add(new_reply)
+    db.session.commit()
+
+    return jsonify({"message": "Reply added successfully"}), 201

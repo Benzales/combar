@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Comment, ApiRequestInfo } from '../types';
 import { CommentBox, CommentHeader, ProfilePic, UserName, CommentText } from '../styles';
 import { uniqueHighlightClass, highlightSelection, unhighlightSelection } from './textHighlighter';
+import CommentReplier from './CommentReplier';
 
 interface CommentLoaderProps {
   isPosting: boolean;
@@ -62,17 +63,20 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
   return (
     <>
       {comments.map((comment, index) => (
-        <CommentBox
-          key={index}
-          onMouseEnter={() => handleMouseEnter(comment)}
-          onMouseLeave={() => handleMouseLeave()}
-        >
-          <CommentHeader>
-            <ProfilePic />
-            <UserName>{comment.username}</UserName>
-          </CommentHeader>
-          <CommentText>{comment.commentText}</CommentText>
-        </CommentBox>
+        <>
+          <CommentBox
+            key={index}
+            onMouseEnter={() => handleMouseEnter(comment)}
+            onMouseLeave={() => handleMouseLeave()}
+          >
+            <CommentHeader>
+              <ProfilePic />
+              <UserName>{comment.username}</UserName>
+            </CommentHeader>
+            <CommentText>{comment.commentText}</CommentText>
+          </CommentBox>
+          <CommentReplier commentId={comment.id} />
+        </>
       ))}
     </>
   );

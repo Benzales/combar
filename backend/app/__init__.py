@@ -19,12 +19,13 @@ def create_app():
     migrate.init_app(app, db)
     
     from .routes.urls import urls
-    from .routes.comments import comments
+    from .routes.comments import comments, replies
     from .routes.users import users
 
     app.register_blueprint(urls)
     app.register_blueprint(comments)
     app.register_blueprint(users)
+    app.register_blueprint(replies)
 
     CORS(app, resources={r'/api/*': {'origins': '*'}})
 

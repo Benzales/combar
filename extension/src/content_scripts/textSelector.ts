@@ -84,6 +84,7 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
     commentText: "error occured while creating comment",
     selectedText: selection.toString(),
     username: "anonymous",
+    id: -1
   };
   return comment;
 }

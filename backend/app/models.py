@@ -60,6 +60,16 @@ class Comment(db.Model):
     end_offset = db.Column(db.Integer, nullable=False)
     comment_text = db.Column(db.String, nullable=False)
     selected_text = db.Column(db.String, nullable=False)
+    replies = db.relationship('Reply', backref='comment', lazy=True)
 
     def __repr__(self):
         return f'<Comment {self.id}>'
+
+class Reply(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=False)
+    reply_text = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f'<Reply {self.id}>'

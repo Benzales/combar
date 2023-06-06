@@ -68,9 +68,7 @@ const CommentPoster: React.FC<CommentPosterProps> = ({ isPosting, setIsPosting, 
           </form>
         </>
         :
-        <>
-          <button onClick={handleCommentClick}> Comment </button>
-        </>
+        <button onClick={handleCommentClick}> Comment </button>
       }
     </>
   )

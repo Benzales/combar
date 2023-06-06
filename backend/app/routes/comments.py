@@ -27,7 +27,6 @@ def create_comment():
     # Set to anonymous user if not logged in
     user_id = 1
     if g.user_id is not None:
-        print(g.user_id)
         user_id = g.user_id
 
     # Create a new comment record and associate it with the Url record

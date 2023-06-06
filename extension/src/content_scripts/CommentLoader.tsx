@@ -69,7 +69,7 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
         >
           <CommentHeader>
             <ProfilePic />
-            <UserName>{"Ben Gonzales"}</UserName>
+            <UserName>{comment.username}</UserName>
           </CommentHeader>
           <CommentText>{comment.commentText}</CommentText>
         </CommentBox>

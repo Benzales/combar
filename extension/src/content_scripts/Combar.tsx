@@ -7,7 +7,6 @@ const Combar: React.FC = () => {
   const [isPosting, setIsPosting] = useState<boolean>(false);
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
 
-
   useEffect(() => {
     window.addEventListener("message", function(event) {
       // We only accept messages from ourselves

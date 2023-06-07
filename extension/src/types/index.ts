@@ -7,6 +7,7 @@ export type Comment = {
   selectedText: string;
   username: string;
   id: number;
+  replies: Reply[];
 };
 
 export type Reply = {

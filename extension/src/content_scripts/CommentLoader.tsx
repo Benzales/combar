@@ -76,6 +76,10 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
             <CommentText>{comment.commentText}</CommentText>
           </CommentBox>
           <CommentReplier commentId={comment.id} />
+          {comment.replies.map((reply, index) => (
+            <p>{reply.replyText}</p>
+          ))
+          }
         </>
       ))}
     </>

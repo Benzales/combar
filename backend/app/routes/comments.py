@@ -57,17 +57,26 @@ def get_comments_by_url(url_string):
 
         for comment in comments:
 
-            user_record = User.query.filter_by(id=comment.user_id).first()
+            comment_user_record = User.query.filter_by(id=comment.user_id).first()
+
+            replies = []
+            for reply in comment.replies:
+                reply_user_record = User.query.filter_by(id=reply.user_id).first()
+                replies.append({
+                    'username': reply_user_record.username,
+                    'replyText': reply.reply_text,
+                })
 
             response.append({
                 'id': comment.id,
-                'username': user_record.username,
+                'username': comment_user_record.username,
                 'url': url_record.url,
                 'pathToCommonAncestor': comment.path_to_common_ancestor,
                 'startOffset': comment.start_offset,
                 'endOffset': comment.end_offset,
                 'commentText': comment.comment_text,
                 'selectedText': comment.selected_text,
+                'replies': replies
             })
 
     return jsonify(response), 200

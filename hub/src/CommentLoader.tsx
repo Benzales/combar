@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Url, Comment } from './types'
-import { CommentContainer, CommentBox, CommentHeader, ProfilePic, UserName, CommentText, CenteredHeading } from './styles';
+import { CommentContainer, CommentBox, CommentHeader, ProfilePic, UserName, CommentText, CenteredHeading } from './styles/comments';
 
 function CommentLoader() {
   const [urlCommentsMap, setUrlCommentsMap] = useState<Record<string, Comment[]>>({});

@@ -1,7 +1,7 @@
 import {
   AboutHeading, LogoContainer, LogoPic, AboutCombar, HeaderImage, ReadMoreButton,
   ExtraContent
-} from "./styles";
+} from "./styles/about";
 import React, { useState } from 'react';
 
 export const About = () => {
@@ -35,11 +35,17 @@ export const About = () => {
         and professionals. <br />
         <br />
         Increased Engagement: The presence of a comments bar on every page can make users more likely to engage <br />
-        with the content and with each other, even if they weren't originally planning on it. <br />
+        with the content and with each other, even if they weren't originally planning on it. This can lead <br />
+        to deeper understanding on a topic and allow people to gain knowledge on perspectives they hadn't <br />
+        encountered before. <br />
         <br />
         Personalized Content Recommendations: This feature could be a major draw for users if executed well.<br />
          By providing recommendations based on their comments and interests, combar can help users discover <br />  
-        new relevant content that they might not have found otherwise.
+        new relevant content that they might not have found otherwise. <br />
+        <br />
+        Through these benefits, Combar is a solution to the lack of contextual discussion and can help <br />
+        solve fragmented and inffecient conversation. This transformative tool reimagines how we communicate <br />
+        on the web, making online discussions more effective and enjoyable. <br />
       </ExtraContent>}
     </div>
   );

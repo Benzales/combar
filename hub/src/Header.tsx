@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import Profile from './Profile';
-import {ProfilePic} from './styles';
+import { ProfilePic } from './styles/comments';
+import { LogoPic} from './styles/about';
+
 // Styled Header
 const HeaderContainer = styled.header`
   display: flex;
@@ -17,9 +19,14 @@ const HeaderContainer = styled.header`
 
 const Logo = styled.h1`
   font-size: 1.5em;
+  margin-left: 70px;
 `;
 
 const Navigation = styled.nav`
+  display: fixed;
+  justify-content: space-between; // Distribute items evenly
+  align-items: center; // Vertically align items in the center
+
   & a {
     color: white;
     margin-right: 15px;
@@ -33,7 +40,6 @@ const Navigation = styled.nav`
 
 // Header component
 function Header() {
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   function openModal() {
@@ -48,7 +54,6 @@ function Header() {
     <HeaderContainer>
       <Logo>combar</Logo>
       <Navigation>
-
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
         <ProfilePic onClick={openModal} />
@@ -60,7 +65,6 @@ function Header() {
       >
         <h2>Edit Profile</h2>
         <button onClick={closeModal}>close</button>
-
         <Profile />
       </Modal>
     </HeaderContainer>

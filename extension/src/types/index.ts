@@ -8,11 +8,14 @@ export type Comment = {
   username: string;
   id: number;
   replies: Reply[];
+  votes: number;
 };
 
 export type Reply = {
+  id: number;
   replyText: string;
   username: string;
+  votes: number;
 }
 export type ApiRequestInfo = {
   url: string;

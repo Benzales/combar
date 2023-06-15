@@ -86,6 +86,7 @@ export async function selectText(selection: Selection): Promise<Comment | undefi
     username: "anonymous",
     id: -1,
     replies: [],
+    votes: 0,
   };
   return comment;
 }

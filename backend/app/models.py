@@ -61,6 +61,7 @@ class Comment(db.Model):
     comment_text = db.Column(db.String, nullable=False)
     selected_text = db.Column(db.String, nullable=False)
     replies = db.relationship('Reply', backref='comment', lazy=True)
+    vote = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return f'<Comment {self.id}>'
@@ -70,6 +71,7 @@ class Reply(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=False)
     reply_text = db.Column(db.String, nullable=False)
+    vote = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return f'<Reply {self.id}>'

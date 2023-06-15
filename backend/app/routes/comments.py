@@ -65,6 +65,8 @@ def get_comments_by_url(url_string):
                 replies.append({
                     'username': reply_user_record.username,
                     'replyText': reply.reply_text,
+                    'votes': reply.vote,
+                    'id': reply.id,
                 })
 
             response.append({
@@ -76,10 +78,41 @@ def get_comments_by_url(url_string):
                 'endOffset': comment.end_offset,
                 'commentText': comment.comment_text,
                 'selectedText': comment.selected_text,
-                'replies': replies
+                'replies': replies,
+                'votes': comment.vote,
             })
 
     return jsonify(response), 200
+
+def vote(comment, data):
+    if 'vote' not in data:
+        return jsonify({'message': 'Bad Request'}), 400
+
+    vote_value = data['vote']
+    if vote_value not in [-1, 1]:
+        return jsonify({'message': 'Invalid vote value'}), 400
+    comment.vote += vote_value
+    db.session.commit()
+
+    return jsonify({'message': 'Vote updated successfully', 'vote': comment.vote})
+
+@comments.route('/api/comments/<int:comment_id>/vote', methods=['POST'])
+def vote_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if not comment:
+        return jsonify({'message': 'Comment not found'}), 404
+    
+    data = request.get_json()
+    return vote(comment, data)
+
+@replies.route('/api/replies/<int:reply_id>/vote', methods=['POST'])
+def vote_reply(reply_id):
+    reply = Reply.query.get(reply_id)
+    if not reply:
+        return jsonify({'message': 'Comment not found'}), 404
+    
+    data = request.get_json()
+    return vote(reply, data)
 
 @replies.route('/api/comments/<int:comment_id>/replies', methods=['POST'])
 def create_reply(comment_id):

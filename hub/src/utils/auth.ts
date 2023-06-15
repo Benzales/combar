@@ -1,5 +1,5 @@
 import jwt_decode from "jwt-decode";
-const extensionID = 'lmebdlihmpkcpbnclibnhipabilfobol';
+const extensionID = 'cmohnfemjhpjblloaehecbmpjoldmggc';
 
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refreshToken');

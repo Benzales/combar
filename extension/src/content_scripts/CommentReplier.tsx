@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ApiRequestInfo } from '../types';
 
 interface CommentReplierProps {
   commentId: number;
@@ -19,7 +20,7 @@ const CommentReplier: React.FC<CommentReplierProps> = ({commentId}) => {
 
   const handlePostClick = (event: React.FormEvent) => {
     event.preventDefault();
-    const apiRequestInfo = {
+    const apiRequestInfo: ApiRequestInfo = {
       url: "/api/comments/" + commentId + "/replies",
       method: "POST",
       body: {"replyText": userInput},

@@ -3,6 +3,7 @@ import { Comment, ApiRequestInfo } from '../types';
 import { CommentBox, CommentHeader, ProfilePic, UserName, CommentText } from '../styles';
 import { uniqueHighlightClass, highlightSelection, unhighlightSelection } from './textHighlighter';
 import CommentReplier from './CommentReplier';
+import CommentVoter from './CommentVoter';
 
 interface CommentLoaderProps {
   isPosting: boolean;
@@ -76,8 +77,12 @@ const CommentLoader: React.FC<CommentLoaderProps> = ({ isPosting }) => {
             <CommentText>{comment.commentText}</CommentText>
           </CommentBox>
           <CommentReplier commentId={comment.id} />
-          {comment.replies.map((reply, index) => (
-            <p>{reply.replyText}</p>
+          {/* <CommentVoter id={comment.id} votes={comment.votes}/> */}
+          {comment.replies.map((reply) => (
+            <>
+              <p>{reply.replyText}</p>
+              <CommentVoter id={reply.id} votes={reply.votes}/>
+            </>
           ))
           }
         </>

@@ -1,5 +1,15 @@
 import styled from '@emotion/styled';
 
+export const CompactMode = styled.div`
+  position: fixed;
+  top: 25%;
+  right: 10px;
+  height: 5vh;
+  width: 5vh;
+  transform: translateY(-50%);
+  background-color: #efefef;
+`;
+
 interface SidebarProps {
   isSelecting: boolean;
 }

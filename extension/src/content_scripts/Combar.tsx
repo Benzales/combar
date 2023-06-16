@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Sidebar } from '../styles';
+import { CompactMode, Sidebar } from '../styles';
 import CommentLoader from './CommentLoader';
 import CommentPoster from './CommentPoster';
 
 const Combar: React.FC = () => {
+  const [isCompactMode, setIsCompactMode] = useState<boolean>(true);
   const [isPosting, setIsPosting] = useState<boolean>(false);
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
 
@@ -19,11 +20,16 @@ const Combar: React.FC = () => {
   }, []);
 
   return (
-    <Sidebar isSelecting={isSelecting}>
-      <h1>Combar</h1>
-      <CommentPoster isPosting={isPosting} setIsPosting={setIsPosting} setIsSelecting={setIsSelecting} />
-      <CommentLoader isPosting={isPosting} />
-    </Sidebar>
+    isCompactMode ? 
+      <CompactMode onClick={() => setIsCompactMode(false)} > 
+        <p> Open </p> 
+      </CompactMode> : 
+      <Sidebar isSelecting={isSelecting}>
+        <button onClick={() => setIsCompactMode(true)}> Close </button>
+        <h1>Combar</h1>
+        <CommentPoster isPosting={isPosting} setIsPosting={setIsPosting} setIsSelecting={setIsSelecting} />
+        <CommentLoader isPosting={isPosting} />
+      </Sidebar>
   );
 };
 

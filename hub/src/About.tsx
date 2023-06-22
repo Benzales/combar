@@ -1,7 +1,7 @@
 import {
   AboutHeading, LogoContainer, LogoPic, AboutCombar, HeaderImage, ReadMoreButton,
-  ExtraContent, ElaborationContainer, BoldedText, SmallerText,
-  DirectContextImage, ElaborationText
+  ExtraContent, ElaborationContainer, BoldedText, SmallerText, IncreasedEngagementImage,
+  DirectContextImage, ElaborationText, TimeSavingImage, PersonalizedContentImage
 } from "./styles/about";
 import React, { useState } from 'react';
 
@@ -53,24 +53,49 @@ export const About = () => {
         </ElaborationText>
       </ElaborationContainer>
       <ElaborationContainer>
-        <DirectContextImage />
+        <TimeSavingImage />
         <ElaborationText>
           <BoldedText>TIME SAVING</BoldedText>
-          <SmallerText>Your smaller text here.</SmallerText>
+          <SmallerText>Combar streamlines online discussions by offering a commenting feature directly <br />
+            on the web page, thus eliminating the need to switch between tabs or apps. <br />
+            This enhances the user experience by saving time and reducing the cognitive <br />
+            load of managing multiple applications. The value of this feature extends across <br />
+            a wide array of users, from educators who can efficiently provide feedback on  <br />
+            digital resources, students engaged in e-learning, to professionals collaborating  <br />
+            on online documents. By consolidating the discussion platform with the content,  <br />
+            Combar facilitates a more efficient and uninterrupted flow of work. <br />
+
+          </SmallerText>
         </ElaborationText>
       </ElaborationContainer>
       <ElaborationContainer>
-        <DirectContextImage />
+        <IncreasedEngagementImage />
         <ElaborationText>
-          <BoldedText>DIRECT CONTEXT</BoldedText>
-          <SmallerText>Your smaller text here.</SmallerText>
+          <BoldedText>INCREASED ENGAGEMENT</BoldedText>
+          <SmallerText>Having a comment bar accessible on every page can significantly enhance user <br />
+            interaction with the content and among each other. With Combar, users can engage<br />
+            in impromptu discussions, share insights, or pose questions related to the content<br />
+            they are consuming. This spontaneous form of interaction encourages a dynamic <br />
+            and vibrant community of users, enhancing the learning and discovery process. <br />
+            As users are more likely to comment when the feature is readily available, this <br />
+            also leads to an increase in the overall user engagement on the platform.<br />
+          </SmallerText>
         </ElaborationText>
       </ElaborationContainer>
       <ElaborationContainer>
-        <DirectContextImage />
+        <PersonalizedContentImage />
         <ElaborationText>
-          <BoldedText>DIRECT CONTEXT</BoldedText>
-          <SmallerText>Your smaller text here.</SmallerText>
+          <BoldedText>PERSONALIZED CONTENT</BoldedText>
+          <SmallerText>Beyond facilitating discussions, Combar also offers a personalized experience to <br />
+            users by providing content recommendations. Based on users' interaction, <br />
+            comments, and interests, Combar can suggest relevant content that aligns with<br />
+            their preferences and engages their curiosity. This powerful feature turns Combar<br />
+            into a personal learning and discovery tool, tailored to each user's unique needs<br />
+            and interests. As the system understands each user's behavior over time, the <br />
+            recommendations become increasingly accurate, leading to a more personalized<br />
+            and satisfying browsing experience. By acting as a gateway to new and relevant <br />
+            content, Combar can effectively foster a continuous learning environment for its users.<br />
+          </SmallerText>
         </ElaborationText>
       </ElaborationContainer>
 

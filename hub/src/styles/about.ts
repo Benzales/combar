@@ -69,7 +69,31 @@ export const ReadMoreButton = styled.button`
   cursor: pointer;
 `;
 export const DirectContextImage = styled.div`
-  background-image: url(abtBack.jpg);
+  background-image: url(hoco.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 400px; // Explicit height
+  flex: 1;  // This will allow the image to share space with the text
+`;
+export const TimeSavingImage = styled.div`
+  background-image: url(mollie.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 400px; // Explicit height
+  flex: 1;  // This will allow the image to share space with the text
+`;
+export const IncreasedEngagementImage = styled.div`
+  background-image: url(csdap.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 400px; // Explicit height
+  flex: 1;  // This will allow the image to share space with the text
+`;
+export const PersonalizedContentImage = styled.div`
+  background-image: url(lantern.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

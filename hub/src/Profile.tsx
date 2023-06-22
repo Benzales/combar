@@ -4,10 +4,12 @@ import { User } from "./types";
 import { UserContext } from "./App";
 import getAccessToken from "./utils/auth";
 import apiRequest from "./utils/apiRequests";
+import Modal from "./Modal"
 
 const Register: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
   const [newUser, setNewUser] = useState<User | null>(null);
+  const [ModalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     apiRequest("api/users", "GET")
@@ -69,29 +71,48 @@ const Register: React.FC = () => {
     setNewUser(null);
   }
 
+
   return (
-    <>
+    <div
+      style={{
+        border: "1px solid black",
+        padding: "20px",
+        position: "fixed",
+        top: "60%",
+        marginTop: "50px",
+        right: "40px",
+        transform: "translateY(-50%)",
+        width: "300px",
+        height: "700px",
+      }}
+    >
       {newUser ? (
         <>
-        {inputFields.map((field) => (
-          <label key={field.key}>
-            {field.label}:
-            <input
-              type="text"
-              value={field.value}
-              onChange={(e) => setNewUser({ ...newUser, [field.key]: e.target.value })}
-              onBlur={changeUserInfo}
-              onKeyDown={(e) => { if (e.key === 'Enter') changeUserInfo(); }}
-            />
-          </label>
-        ))}
-        <button onClick={logout}>Logout</button>
-      </>
+          {inputFields.map((field) => (
+            <div key={field.key} style={{ marginBottom: "10px" }}>
+              <label style={{ marginBottom: "5px" }}>
+                {field.label}:
+              </label>
+              <input
+                type="text"
+                value={field.value}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, [field.key]: e.target.value })
+                }
+                onBlur={changeUserInfo}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") changeUserInfo();
+                }}
+              />
+            </div>
+          ))}
+          <button onClick={logout}>Logout</button>
+        </>
       ) : (
         googleLoginButton
       )}
-    </>
+    </div>
   );
 };
 
-export default Register;
+  export default Register;

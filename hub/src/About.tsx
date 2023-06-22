@@ -1,21 +1,21 @@
 import {
   AboutHeading, LogoContainer, LogoPic, AboutCombar, HeaderImage, ReadMoreButton,
-  ExtraContent
+  ExtraContent, ElaborationContainer, BoldedText, SmallerText,
+  DirectContextImage, ElaborationText
 } from "./styles/about";
 import React, { useState } from 'react';
 
 export const About = () => {
   const [isReadMore, setIsReadMore] = useState(false);
-
-
   const linkName = isReadMore ? 'hide ' : 'read combars full mission statement ';
+
   return (
     <div>
       <HeaderImage />
       <LogoContainer>
         <LogoPic />
       </LogoContainer>
-      <AboutHeading>Unlocking Insights: Connect, Inquire, Empower.</AboutHeading>
+      <AboutHeading>While reading on the internet, we want to foster <br /> discussion and deeper thinking...</AboutHeading>
       <AboutCombar>
         Combar: universal comment bar on every webpage. It’s a Chrome extension <br />
         enabling comments in the margins of web pages. There will be a supplementary <br />
@@ -25,31 +25,60 @@ export const About = () => {
         {linkName}
       </ReadMoreButton>
       {isReadMore && <ExtraContent>
-        Direct Context: With combar, discussions can take place directly on the page <br />
-        of the content, preserving the context and ensuring that everyone participating in the discussion <br />
-        has immediate access to the source material. This is a significant upgrade over having discussions <br />
-        on a separate platform where context might get lost or misunderstood. <br />
+        Our mission at Combar is to foster open dialogue and create a shared space for thought and discovery <br />
+        on every webpage. We aim to redefine the way individuals interact with online content, transforming <br />
+        solitary browsing into an interactive and enriched experience. As a universal comment bar, we strive <br />
+        to stimulate insightful discussions and foster a vibrant, inclusive community where every voice can <br />
+        be heard. <br />
         <br />
-        Time-Saving: By eliminating the need to switch between tabs or apps to discuss or make notes, combar <br />
-        can save users time and increase efficiency. This can be particularly valuable for educators, students, <br />
-        and professionals. <br />
-        <br />
-        Increased Engagement: The presence of a comments bar on every page can make users more likely to engage <br />
-        with the content and with each other, even if they weren't originally planning on it. This can lead <br />
-        to deeper understanding on a topic and allow people to gain knowledge on perspectives they hadn't <br />
-        encountered before. <br />
-        <br />
-        Personalized Content Recommendations: This feature could be a major draw for users if executed well.<br />
-         By providing recommendations based on their comments and interests, combar can help users discover <br />  
-        new relevant content that they might not have found otherwise. <br />
-        <br />
-        Through these benefits, Combar is a solution to the lack of contextual discussion and can help <br />
-        solve fragmented and inffecient conversation. This transformative tool reimagines how we communicate <br />
-        on the web, making online discussions more effective and enjoyable. <br />
+        Our supplementary hub is designed to personalize and enhance the browsing experience, delivering <br />
+        recommended content and important updates directly to our users. We believe in the power of shared <br />
+        knowledge and collective wisdom to shape our understanding of the world. At Combar, we're not just <br />
+        browsing the web, we're evolving it. <br />
       </ExtraContent>}
+      <ElaborationContainer>
+        <DirectContextImage />
+        <ElaborationText>
+          <BoldedText>DIRECT CONTEXT</BoldedText>
+          <SmallerText>Combar presents a revolutionary way to participate in online discussions by <br />
+            providing the ability to comment directly on the content. This innovation ensures <br />
+            discussions occur in the context of the source material, an approach that fosters <br />
+            an accurate understanding of the content and coherent discussions. Traditionally, <br />
+            online conversations happen on separate platforms or threads, detached from <br />
+            the original material, which often leads to fragmented understanding and diluted<br />
+            conversations. With Combar, participants can reference specific parts of the <br />
+            content, facilitating a seamless exchange of ideas and minimizing the risk of <br />
+            misinterpretation or misunderstanding of the content.<br />
+          </SmallerText>
+        </ElaborationText>
+      </ElaborationContainer>
+      <ElaborationContainer>
+        <DirectContextImage />
+        <ElaborationText>
+          <BoldedText>TIME SAVING</BoldedText>
+          <SmallerText>Your smaller text here.</SmallerText>
+        </ElaborationText>
+      </ElaborationContainer>
+      <ElaborationContainer>
+        <DirectContextImage />
+        <ElaborationText>
+          <BoldedText>DIRECT CONTEXT</BoldedText>
+          <SmallerText>Your smaller text here.</SmallerText>
+        </ElaborationText>
+      </ElaborationContainer>
+      <ElaborationContainer>
+        <DirectContextImage />
+        <ElaborationText>
+          <BoldedText>DIRECT CONTEXT</BoldedText>
+          <SmallerText>Your smaller text here.</SmallerText>
+        </ElaborationText>
+      </ElaborationContainer>
+
+
     </div>
   );
 };
+
 
 
 

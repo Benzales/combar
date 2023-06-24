@@ -45,9 +45,9 @@ export const ProfilePic = styled.div`
 `;
 
 export const CommentHeader = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 2px;
+  justify-content: flex-start;
+  align-items: left;
+  margin-bottom: 0px;
 `;
 
 export const UserName = styled.p`
@@ -60,5 +60,5 @@ export const CommentText = styled.p`
 `;
 
 export const CenteredHeading = styled.h1`
-  text-align: center;
+  text-align: left;
 `;

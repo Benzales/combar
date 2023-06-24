@@ -19,23 +19,35 @@ const HeaderContainer = styled.header`
 
 const Logo = styled.h1`
   font-size: 1.5em;
-  margin-left: 70px;
 `;
 
 const Navigation = styled.nav`
-  display: fixed;
-  justify-content: space-between; // Distribute items evenly
-  align-items: center; // Vertically align items in the center
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 
   & a {
     color: white;
-    margin-right: 15px;
+    margin: 0 15px;
     text-decoration: none;
 
     &:hover {
       color: #61dafb;
     }
   }
+`;
+
+const ScopeLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PageLinks = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 // Header component
@@ -54,9 +66,17 @@ function Header() {
     <HeaderContainer>
       <Logo>combar</Logo>
       <Navigation>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <ProfilePic onClick={openModal} />
+        <div></div>
+        <ScopeLinks>
+          <Link to="/">Recommended</Link>
+          <Link to="/">Following</Link>
+        </ScopeLinks>
+        <PageLinks>
+          {/* <Link to="/notifications">Notification Center</Link> */}
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+          <ProfilePic onClick={openModal} />
+        </PageLinks>
       </Navigation>
       <Modal
         isOpen={modalIsOpen}

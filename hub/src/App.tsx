@@ -26,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<CommentLoader />} />
           <Route path="/about" element={<About />} />
+          {/* <Route path="/notifications" element={} */}
         </Routes>
         <Footer />
       </Router>

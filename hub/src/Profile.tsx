@@ -1,9 +1,120 @@
 import React, { useState, useEffect, useContext } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import { User } from "./types";
+import { User, Group } from "./types";
 import { UserContext } from "./App";
-import getAccessToken from "./utils/auth";
 import apiRequest from "./utils/apiRequests";
+
+type GroupProps = {
+  groupId: string;
+};
+
+const AddUsersToGroup: React.FC<GroupProps> = ({ groupId }) => {
+  const [usernames, setUsernames] = useState<string[]>([]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newUsernames = [...usernames];
+    newUsernames[index] = event.target.value;
+    setUsernames(newUsernames);
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const response = await fetch(`http://localhost:5000/api/groups/${groupId}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ usernames }),
+    });
+
+    if (!response.ok) {
+      const message = await response.text();
+      console.error('Error:', message);
+      return;
+    }
+
+    const group = await response.json();
+    console.log('Updated group:', group);
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {usernames.map((username, index) => (
+        <input
+          key={index}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={event => handleInputChange(event, index)}
+        />
+      ))}
+      <button type="button" onClick={() => setUsernames([...usernames, ""])}>Add User</button>
+      <button type="submit">Update Group</button>
+    </form>
+  );
+}
+
+function GroupComponent() {
+    const [groups, setGroups] = useState<Group[]>([]);
+    const [newGroupName, setNewGroupName] = useState('');
+
+    useEffect(() => {
+        fetch('http://localhost:5000/api/groups')
+            .then(response => {
+                if (!response.ok) { 
+                    throw new Error(response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => setGroups(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    const createGroup = () => {
+      console.log('newGroupName', newGroupName);
+        fetch('http://localhost:5000/api/groups', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ groupName: newGroupName }),
+        })
+        .then(response => {
+            if (!response.ok) { 
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            setGroups([...groups, data]);
+            setNewGroupName('');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    return (
+        <div>
+            {groups.map(group => (
+                <div key={group.id}>
+                    <h2>{group.groupName}</h2>
+                    <p>Members: {group.members.length}</p>
+                    <p>Comments: {group.comments.length}</p>
+                    <AddUsersToGroup groupId={group.id} />
+                </div>
+            ))}
+            <input 
+                type="text" 
+                value={newGroupName} 
+                onChange={e => setNewGroupName(e.target.value)} 
+                placeholder="Enter new group name" 
+            />
+            <button onClick={createGroup}>Create Group</button>
+        </div>
+    );
+}
 
 const Register: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -86,6 +197,7 @@ const Register: React.FC = () => {
           </label>
         ))}
         <button onClick={logout}>Logout</button>
+        <GroupComponent />
       </>
       ) : (
         googleLoginButton

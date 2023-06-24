@@ -27,3 +27,10 @@ export type ApiRequestInfo = {
   method: string;
   body: any;
 }
+
+export type Group = {
+  id: string;
+  groupName: string;
+  members: User[];
+  comments: Comment[];
+}

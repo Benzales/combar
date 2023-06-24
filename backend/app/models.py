@@ -24,6 +24,15 @@ class User(db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'name': self.name,
+            'bio': self.bio,
+        }
         
     def follow(self, user):
         if not self.is_following(user):
@@ -63,6 +72,20 @@ class Comment(db.Model):
     replies = db.relationship('Reply', backref='comment', lazy=True)
     vote = db.Column(db.Integer, nullable=False, default=0)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.user.username,
+            'url': self.url.url,
+            'pathToCommonAncestor': self.path_to_common_ancestor,
+            'startOffset': self.start_offset,
+            'endOffset': self.end_offset,
+            'commentText': self.comment_text,
+            'selectedText': self.selected_text,
+            'replies': [reply.to_dict() for reply in self.replies],
+            'vote': self.vote
+        }
+
     def __repr__(self):
         return f'<Comment {self.id}>'
 
@@ -73,5 +96,43 @@ class Reply(db.Model):
     reply_text = db.Column(db.String, nullable=False)
     vote = db.Column(db.Integer, nullable=False, default=0)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.user.username,
+            'replyText': self.reply_text,
+            'votes': self.vote
+        }
+
     def __repr__(self):
         return f'<Reply {self.id}>'
+    
+from sqlalchemy import Table, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+
+# this is an association table for many-to-many relation between Group and User
+group_user = Table('group_user', db.Model.metadata,
+    db.Column('group_id', db.Integer, ForeignKey('group.id')),
+    db.Column('user_id', db.Integer, ForeignKey('user.id'))
+)
+
+# this is an association table for many-to-many relation between Group and Comment
+group_comment = Table('group_comment', db.Model.metadata,
+    db.Column('group_id', db.Integer, ForeignKey('group.id')),
+    db.Column('comment_id', db.Integer, ForeignKey('comment.id'))
+)
+
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_name = db.Column(db.String(64), nullable=False)
+    creation_date = db.Column(DateTime, default=db.func.current_timestamp())
+    users = relationship('User', secondary=group_user, backref=db.backref('groups', lazy='dynamic'))
+    comments = relationship('Comment', secondary=group_comment, backref=db.backref('groups', lazy='dynamic'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'groupName': self.group_name,
+            'members': [user.to_dict() for user in self.users],
+            'comments': [comment.to_dict() for comment in self.comments]
+        }

@@ -46,8 +46,6 @@ const getAccessToken = async () => {
           accessToken = await refreshAccessToken();
       }
   }
-  const refreshToken = localStorage.getItem('refreshToken');
-  window.postMessage({ type: "FROM_PAGE", accessToken: accessToken, refreshToken: refreshToken }, "*");
   
   return accessToken;
 }

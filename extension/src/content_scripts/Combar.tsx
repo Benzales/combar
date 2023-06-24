@@ -9,12 +9,16 @@ const Combar: React.FC = () => {
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
 
   useEffect(() => {
-    window.addEventListener("message", function(event) {
+    window.postMessage({ type: "FROM_CONTENT_SCRIPT", text: "Hello from the content script!" }, "*");
+
+    // Listen for a response
+    window.addEventListener('message', function(event) {
       // We only accept messages from ourselves
-      if (event.source != window) return;
-      
-      if (event.data.type && (event.data.type == "FROM_PAGE")) {
-          chrome.runtime.sendMessage({from: 'content', accessToken: event.data.accessToken, refreshToken: event.data.refreshToken})
+      if (event.source !== window) return;
+
+      if (event.data.type && (event.data.type === "FROM_PAGE")) {
+        console.log("Page script has sent a response: " + event.data.text);
+        chrome.runtime.sendMessage({from: 'content', accessToken: event.data.accessToken, refreshToken: event.data.refreshToken})
       }
     }, false);
   }, []);
